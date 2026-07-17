@@ -1,0 +1,38 @@
+{
+  "name": "FoodieHub",
+  "short_name": "FoodieHub",
+  "description": "Food ordering frontend demo with cart, checkout, and admin panel.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "categories": ["food", "shopping", "lifestyle"],
+  "background_color": "#0b1118",
+  "theme_color": "#ff6f4d",
+  "shortcuts": [
+    {
+      "name": "Open Menu",
+      "url": "./pages/menu.html"
+    },
+    {
+      "name": "View Cart",
+      "url": "./pages/cart.html"
+    },
+    {
+      "name": "My Orders",
+      "url": "./pages/orders.html"
+    }
+  ],
+  "icons": [
+    {
+      "src": "assets/Main/logo.webp",
+      "sizes": "192x192",
+      "type": "image/webp"
+    },
+    {
+      "src": "assets/Main/logo.webp",
+      "sizes": "512x512",
+      "type": "image/webp"
+    }
+  ]
+}

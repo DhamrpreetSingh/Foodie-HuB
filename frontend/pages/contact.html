@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#ff6f4d">
+    <link rel="manifest" href="../manifest.webmanifest">
+    <title>FoodieHub - Contact</title>
+    <link href="../bootstrap/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/advanced-ui.css">
+    <link rel="icon" href="../assets/Main/logo.webp" type="image/webp">
+    <style>
+        .contact-hero-grid {
+            position: relative;
+            isolation: isolate;
+        }
+
+        .contact-hero-grid::after {
+            content: "";
+            position: absolute;
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 99, 68, 0.32), rgba(255, 99, 68, 0));
+            top: 8%;
+            right: 4%;
+            z-index: -1;
+        }
+
+        .contact-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.35rem 0.8rem;
+            border-radius: 999px;
+            font-size: 0.78rem;
+            letter-spacing: 0.03em;
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .contact-chip strong {
+            color: #ffd3c7;
+        }
+
+        .contact-panel {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+            padding: 1.2rem;
+        }
+
+        .glass-divider {
+            height: 1px;
+            margin: 1rem 0 1.2rem;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.6rem;
+        }
+
+        .quick-action-btn {
+            width: 100%;
+            justify-content: center;
+            border-radius: 0.8rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+        }
+
+        .contact-form .form-control,
+        .contact-form .form-select {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            color: #eaeff5;
+        }
+
+        .contact-form .form-select option {
+            color: #111111;
+            background: #ffffff;
+        }
+
+        .contact-form #topic.form-select {
+            min-height: calc(3.5rem + 2px);
+            padding-top: 1rem;
+            padding-bottom: 0.6rem;
+            border-radius: 0.75rem;
+        }
+
+        .contact-form .form-control::placeholder {
+            color: #9fb0bf;
+        }
+
+        .contact-form .form-floating > label {
+            color: #9fb0bf;
+        }
+
+        .contact-form .form-floating .form-control::placeholder {
+            color: transparent;
+        }
+
+        .contact-form .form-control:focus,
+        .contact-form .form-select:focus {
+            border-color: rgba(255, 99, 68, 0.65);
+            box-shadow: 0 0 0 0.2rem rgba(255, 99, 68, 0.2);
+            background: rgba(255, 255, 255, 0.06);
+            color: #ffffff;
+        }
+
+        .contact-form .form-control.is-invalid,
+        .contact-form .form-select.is-invalid {
+            border-color: rgba(220, 53, 69, 0.75);
+            box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.15);
+        }
+
+        .contact-form .form-control.is-valid,
+        .contact-form .form-select.is-valid {
+            border-color: rgba(25, 135, 84, 0.75);
+            box-shadow: 0 0 0 0.2rem rgba(25, 135, 84, 0.13);
+        }
+
+        .contact-form .invalid-feedback {
+            color: #ff8c9a;
+        }
+
+        .contact-submit-wrap {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            flex-wrap: wrap;
+        }
+
+        .contact-item-icon {
+            width: 44px;
+            height: 44px;
+            display: grid;
+            place-items: center;
+            border-radius: 0.8rem;
+            background: rgba(255, 99, 68, 0.2);
+            color: #ff9c88;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .contact-kpi {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 0.7rem;
+            margin-top: 1rem;
+        }
+
+        .contact-kpi-item {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.75rem;
+            padding: 0.7rem;
+            text-align: center;
+        }
+
+        .contact-kpi-item strong {
+            display: block;
+            font-size: 1.1rem;
+            color: #ffd3c7;
+        }
+
+        .contact-tools {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .contact-tool {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.75rem;
+            padding: 0.75rem;
+        }
+
+        .contact-tool .form-control {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            color: #eaeff5;
+        }
+
+        .contact-tool .form-control::placeholder {
+            color: #9fb0bf;
+        }
+
+        .contact-helper {
+            font-size: 0.82rem;
+            color: #9fb0bf;
+        }
+
+        .contact-copy {
+            border-radius: 999px;
+            font-size: 0.76rem;
+            padding: 0.2rem 0.6rem;
+        }
+
+        .message-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 0.82rem;
+        }
+
+        .support-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            font-size: 0.8rem;
+            padding: 0.3rem 0.65rem;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .status-dot {
+            width: 0.55rem;
+            height: 0.55rem;
+            border-radius: 50%;
+            background: #20c997;
+            box-shadow: 0 0 0 4px rgba(32, 201, 151, 0.18);
+        }
+
+        .faq-search {
+            max-width: 460px;
+            margin: 0 auto 1.25rem;
+        }
+
+        .faq-hidden {
+            display: none;
+        }
+
+        .mini-map {
+            width: 100%;
+            min-height: 280px;
+            border: 0;
+            border-radius: 1rem;
+        }
+
+        .newsletter-section {
+            background:
+                radial-gradient(circle at 12% 18%, rgba(255, 166, 98, 0.2), transparent 36%),
+                radial-gradient(circle at 86% 80%, rgba(52, 152, 219, 0.18), transparent 34%),
+                linear-gradient(135deg, #0e1623 0%, #0a1019 55%, #08111d 100%);
+        }
+
+        .newsletter-shell {
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 1.2rem;
+            overflow: hidden;
+            background: linear-gradient(120deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+            box-shadow: 0 32px 42px -30px rgba(0, 0, 0, 0.7);
+        }
+
+        .newsletter-left {
+            padding: 2.1rem 1.4rem;
+            color: #e8f1fb;
+        }
+
+        .newsletter-eyebrow {
+            display: inline-block;
+            font-size: 0.72rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #ffd7a6;
+            border: 1px solid rgba(255, 215, 166, 0.4);
+            border-radius: 999px;
+            padding: 0.2rem 0.65rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .newsletter-title {
+            color: #f7fbff;
+            margin-bottom: 0.55rem;
+        }
+
+        .newsletter-copy {
+            color: #afc0d4;
+            margin-bottom: 1rem;
+            max-width: 32rem;
+        }
+
+        .newsletter-points {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.55rem;
+        }
+
+        .newsletter-point {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.32rem;
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.04);
+            color: #d6e3f0;
+            font-size: 0.82rem;
+            padding: 0.28rem 0.65rem;
+        }
+
+        .newsletter-point i {
+            color: #ffb76d;
+        }
+
+        .newsletter-form-card {
+            height: 100%;
+            background: rgba(6, 10, 16, 0.76);
+            border-left: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 2.1rem 1.4rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .newsletter-input {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #f8fbff;
+            min-height: 52px;
+        }
+
+        .newsletter-input::placeholder {
+            color: #9db0c4;
+        }
+
+        .newsletter-input:focus {
+            background: rgba(255, 255, 255, 0.12);
+            color: #fff;
+            border-color: rgba(255, 133, 96, 0.75);
+            box-shadow: 0 0 0 0.2rem rgba(255, 133, 96, 0.2);
+        }
+
+        .newsletter-btn {
+            min-height: 52px;
+            background: linear-gradient(135deg, #ff845f 0%, #ff5f43 100%);
+            border: 0;
+            font-weight: 700;
+        }
+
+        .newsletter-btn:hover {
+            background: linear-gradient(135deg, #ff7851 0%, #ff5134 100%);
+        }
+
+        .newsletter-note {
+            color: #8ea3b9;
+            font-size: 0.82rem;
+            margin-top: 0.65rem;
+        }
+
+        @media (max-width: 767.98px) {
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-kpi {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-tools {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 991.98px) {
+            .newsletter-form-card {
+                border-left: 0;
+                border-top: 1px solid rgba(255, 255, 255, 0.12);
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm sticky-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="./home.html">
+                <img src="../assets/Main/logo.webp" alt="FoodieHub Logo" width="40" height="40" class="d-inline-block align-text-top me-2">
+                FoodieHub
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="./home.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="./menu.html">Menu</a></li>
+                    <li class="nav-item"><a class="nav-link" href="./about.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="./contact.html">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link" href="./orders.html">Orders</a></li>
+                    <li class="nav-item"><a class="btn btn-outline-warning ms-2" href="./cart.html">View Cart <span id="navCartCount" class="badge bg-dark ms-1">0</span></a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section class="bg-light py-5 hero-section">
+        <div class="container">
+            <div class="row align-items-center g-4 contact-hero-grid">
+                <div class="col-lg-6">
+                    <span class="contact-chip mb-3"><i class="bi bi-headset"></i> Support Team Online <strong>24/7</strong></span>
+                    <h1 class="display-4 fw-bold mb-3">Talk to FoodieHub in Minutes</h1>
+                    <p class="lead mb-4">Order issue, refund, delivery delay, or partnership query. Send us a message and we will respond fast.</p>
+                    <div class="d-flex flex-wrap gap-2">
+                        <a href="#contactForm" class="btn btn-primary btn-lg">Send Message</a>
+                        <a href="tel:+910000000000" class="btn btn-outline-secondary btn-lg">Call Support</a>
+                    </div>
+                </div>
+                <div class="col-lg-6 text-center">
+                    <img src="../assets/items/item-026.webp" alt="Customer support desk" class="img-fluid rounded shadow-lg hero-img">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-5 bg-light" id="why-choose-us">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold">Choose Your Contact Method</h2>
+                <p class="text-muted">Fastest ways to get help based on your request type.</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm text-center p-4">
+                        <div class="mb-3"><img src="../assets/Choose_us/Support.webp" alt="Live chat" width="60"></div>
+                        <h5 class="card-title">Live Chat</h5>
+                        <p class="card-text">For urgent order updates and delivery support.</p>
+                        <a href="#contactForm" class="btn btn-sm btn-outline-primary">Start Chat</a>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm text-center p-4">
+                        <div class="mb-3"><img src="../assets/Choose_us/Delivery.webp" alt="Phone support" width="60"></div>
+                        <h5 class="card-title">Phone Support</h5>
+                        <p class="card-text">Call us for fast resolution during active orders.</p>
+                        <a href="tel:+910000000000" class="btn btn-sm btn-outline-primary">+91 00000 00000</a>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm text-center p-4">
+                        <div class="mb-3"><img src="../assets/Choose_us/Ingredients.webp" alt="Email support" width="60"></div>
+                        <h5 class="card-title">Email</h5>
+                        <p class="card-text">For billing, account, and business requests.</p>
+                        <a href="mailto:contact@foodiehub.local" class="btn btn-sm btn-outline-primary">contact@foodiehub.local</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-5 bg-white" id="featured-food">
+        <div class="container">
+            <div class="row g-4 align-items-stretch">
+                <div class="col-lg-7">
+                    <div class="contact-panel h-100">
+                        <h3 class="mb-3">Send Us a Message</h3>
+                        <p class="text-muted mb-4">Share details and we will get back to you as soon as possible.</p>
+                        <div id="draftNotice" class="alert alert-warning d-none py-2 px-3 mb-3" role="alert">
+                            Draft restored from previous session.
+                        </div>
+                        <form id="contactForm" class="contact-form row g-3" novalidate>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input id="name" name="name" type="text" class="form-control" placeholder="Your name" required minlength="2">
+                                    <label for="name">Full Name</label>
+                                </div>
+                                <div class="invalid-feedback">Please enter your name.</div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input id="phone" name="phone" type="tel" class="form-control" placeholder="+91 00000 00000" required pattern="^[+0-9 ()-]{8,}$">
+                                    <label for="phone">Phone</label>
+                                </div>
+                                <div class="invalid-feedback">Please enter a valid phone number.</div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input id="email" name="email" type="email" class="form-control" placeholder="you@example.com" required>
+                                    <label for="email">Email</label>
+                                </div>
+                                <div class="invalid-feedback">Please enter a valid email address.</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="topic" class="form-label mb-1">Topic</label>
+                                <select id="topic" name="topic" class="form-select" required>
+                                    <option value="">Select topic</option>
+                                    <option value="order">Order Issue</option>
+                                    <option value="refund">Refund Request</option>
+                                    <option value="delay">Delivery Delay</option>
+                                    <option value="partnership">Partnership</option>
+                                    <option value="general">General Question</option>
+                                </select>
+                                <div class="invalid-feedback">Please select a topic.</div>
+                                <div id="topicHint" class="contact-helper mt-1">Choose a topic to see quick guidance.</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="orderId" class="form-label mb-1">Order ID (Optional)</label>
+                                <input id="orderId" name="order_id" type="text" class="form-control" placeholder="e.g. FH-20493">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="priority" class="form-label mb-1">Priority</label>
+                                <select id="priority" name="priority" class="form-select">
+                                    <option value="normal" selected>Normal</option>
+                                    <option value="high">High</option>
+                                    <option value="urgent">Urgent</option>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <label for="message" class="form-label">Message</label>
+                                <textarea id="message" name="message" class="form-control" rows="5" placeholder="Tell us how we can help..." required minlength="10" maxlength="500"></textarea>
+                                <div class="message-meta mt-1">
+                                    <small id="messageCount" class="contact-helper">0 / 500</small>
+                                    <small id="draftState" class="contact-helper">Draft auto-save enabled</small>
+                                </div>
+                                <div class="invalid-feedback">Please write at least 10 characters.</div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="consent" required>
+                                    <label class="form-check-label" for="consent">
+                                        I agree to be contacted regarding this request.
+                                    </label>
+                                    <div class="invalid-feedback">Consent is required to submit.</div>
+                                </div>
+                            </div>
+                            <div class="col-12 contact-submit-wrap">
+                                <button type="submit" id="contactSubmitBtn" class="btn btn-primary btn-lg">
+                                    <span class="submit-label">Submit</span>
+                                    <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                                </button>
+                                <button type="reset" class="btn btn-outline-secondary btn-lg">Reset</button>
+                                <small class="text-muted">Average response time: 15 minutes</small>
+                            </div>
+                            <div class="col-12">
+                                <div id="contactSuccess" class="alert alert-success d-none mb-0" role="alert">
+                                    Message sent successfully. Ticket ID: <strong id="ticketIdText">FH-00000</strong>.
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-lg-5">
+                    <div class="contact-panel h-100">
+                        <h3 class="mb-3">Support Details</h3>
+                        <div class="support-status mb-3" id="supportStatus">
+                            <span class="status-dot"></span>
+                            <span>Support currently online</span>
+                        </div>
+                        <div class="quick-actions mb-3">
+                            <a class="btn btn-outline-primary quick-action-btn" href="tel:+910000000000"><i class="bi bi-telephone-outbound"></i> Call Now</a>
+                            <a class="btn btn-outline-primary quick-action-btn" href="mailto:contact@foodiehub.local"><i class="bi bi-envelope-open"></i> Email Us</a>
+                            <a class="btn btn-outline-primary quick-action-btn" href="#contactForm"><i class="bi bi-chat-dots"></i> Open Form</a>
+                            <a class="btn btn-outline-primary quick-action-btn" href="./menu.html"><i class="bi bi-bag"></i> Back To Menu</a>
+                        </div>
+                        <div class="glass-divider"></div>
+                        <div class="d-flex gap-3 mb-3">
+                            <div class="contact-item-icon"><i class="bi bi-geo-alt-fill"></i></div>
+                            <div>
+                                <div class="fw-semibold">Office Address</div>
+                                <div class="text-muted">Your City, Your State</div>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-3 mb-3">
+                            <div class="contact-item-icon"><i class="bi bi-telephone-fill"></i></div>
+                            <div>
+                                <div class="fw-semibold">Call Us</div>
+                                <div class="text-muted d-flex align-items-center gap-2">+91 00000 00000 <button type="button" class="btn btn-outline-secondary contact-copy" data-copy="+91 00000 00000">Copy</button></div>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-3 mb-3">
+                            <div class="contact-item-icon"><i class="bi bi-envelope-fill"></i></div>
+                            <div>
+                                <div class="fw-semibold">Email</div>
+                                <div class="text-muted d-flex align-items-center gap-2">contact@foodiehub.local <button type="button" class="btn btn-outline-secondary contact-copy" data-copy="contact@foodiehub.local">Copy</button></div>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-3">
+                            <div class="contact-item-icon"><i class="bi bi-clock-fill"></i></div>
+                            <div>
+                                <div class="fw-semibold">Support Hours</div>
+                                <div class="text-muted">Mon - Sun: 9:00 AM - 12:00 AM</div>
+                            </div>
+                        </div>
+                        <div class="contact-kpi">
+                            <div class="contact-kpi-item"><strong>2m</strong><span class="text-muted">Chat Pickup</span></div>
+                            <div class="contact-kpi-item"><strong>15m</strong><span class="text-muted">Avg Resolution</span></div>
+                            <div class="contact-kpi-item"><strong>4.9</strong><span class="text-muted">Support Rating</span></div>
+                        </div>
+                        <div class="contact-tools">
+                            <div class="contact-tool">
+                                <div class="fw-semibold mb-2">Track Request</div>
+                                <input id="trackInput" class="form-control form-control-sm mb-2" placeholder="Enter Ticket ID">
+                                <button type="button" id="trackBtn" class="btn btn-sm btn-outline-primary w-100">Check Status</button>
+                                <small id="trackResult" class="contact-helper d-block mt-2">Example: FH-24518</small>
+                            </div>
+                            <div class="contact-tool">
+                                <div class="fw-semibold mb-2">Current Support Time</div>
+                                <div id="supportClock" class="h5 mb-1">--:--:--</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-5 bg-light" id="faq">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold">Contact FAQ</h2>
+                <p class="text-muted">Common questions about response times and support handling.</p>
+            </div>
+            <div class="faq-search">
+                <input type="search" id="faqSearch" class="form-control" placeholder="Search FAQ, e.g. refund, response, bulk orders">
+            </div>
+            <div class="accordion" id="faqAccordion">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faq1">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1" aria-expanded="true" aria-controls="collapse1">
+                            How fast will I get a response?
+                        </button>
+                    </h2>
+                    <div id="collapse1" class="accordion-collapse collapse show" aria-labelledby="faq1" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Most chat and form requests are handled within 10 to 30 minutes during support hours.
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faq2">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="false" aria-controls="collapse2">
+                            What details should I include for order issues?
+                        </button>
+                    </h2>
+                    <div id="collapse2" class="accordion-collapse collapse" aria-labelledby="faq2" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Include order ID, issue summary, and preferred resolution so we can resolve quickly.
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faq3">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3" aria-expanded="false" aria-controls="collapse3">
+                            Do you support business and bulk orders?
+                        </button>
+                    </h2>
+                    <div id="collapse3" class="accordion-collapse collapse" aria-labelledby="faq3" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Yes. Use the Partnership topic in the form and our team will contact you with options.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="faqEmptyState" class="text-center text-muted mt-3 d-none">No FAQ matched your search.</div>
+        </div>
+    </section>
+
+    <section class="py-5 bg-white" id="blog">
+        <div class="container">
+            <div class="text-center mb-4">
+                <h2 class="fw-bold">Find Us</h2>
+                <p class="text-muted">Visit our office location for business and collaboration meetings.</p>
+            </div>
+            <iframe
+                class="mini-map"
+                title="FoodieHub office map"
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+                src="https://www.google.com/maps?q=Connaught+Place+New+Delhi&output=embed">
+            </iframe>
+        </div>
+    </section>
+
+    <section class="newsletter-section py-5">
+        <div class="container">
+            <div class="newsletter-shell">
+                <div class="row g-0 align-items-stretch">
+                    <div class="col-lg-7">
+                        <div class="newsletter-left">
+                            <span class="newsletter-eyebrow">FoodieHub Insider</span>
+                            <h2 class="fw-bold newsletter-title">Food updates worth opening</h2>
+                            <p class="newsletter-copy">Join the list for launch-day menus, flash deals, and chef specials before they go public.</p>
+                            <div class="newsletter-points">
+                                <span class="newsletter-point"><i class="bi bi-patch-check-fill"></i> Weekly offers</span>
+                                <span class="newsletter-point"><i class="bi bi-bell-fill"></i> New dish alerts</span>
+                                <span class="newsletter-point"><i class="bi bi-shield-check"></i> No spam</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-5">
+                        <div class="newsletter-form-card">
+                            <form class="row g-3">
+                                <div class="col-12">
+                                    <input type="email" class="form-control form-control-lg newsletter-input" placeholder="Enter your email address" required>
+                                </div>
+                                <div class="col-12">
+                                    <button type="submit" class="btn newsletter-btn btn-lg w-100">Subscribe Now</button>
+                                </div>
+                            </form>
+                            <small class="newsletter-note">Unsubscribe anytime. We send only relevant food updates.</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section><footer class="bg-dark text-light pt-5 pb-3">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <h5 class="fw-bold mb-3">FoodieHub</h5>
+                    <p>Freshly made meals delivered with speed and consistency.</p>
+                    <div class="d-flex gap-2">
+                        <a href="#" class="text-light fs-4"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="text-light fs-4"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="text-light fs-4"><i class="bi bi-twitter-x"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-2 mb-4 mb-md-0">
+                    <h6 class="fw-bold mb-3">Quick Links</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="./home.html" class="text-light text-decoration-none">Home</a></li>
+                        <li><a href="./menu.html" class="text-light text-decoration-none">Menu</a></li>
+                        <li><a href="./about.html" class="text-light text-decoration-none">About</a></li>
+                        <li><a href="./contact.html" class="text-light text-decoration-none">Contact</a></li>
+                        <li><a href="./orders.html" class="text-light text-decoration-none">Orders</a></li>
+                        <li><a href="./checkout.html" class="text-light text-decoration-none">Checkout</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3 mb-4 mb-md-0">
+                    <h6 class="fw-bold mb-3">Contact Us</h6>
+                    <ul class="list-unstyled">
+                        <li><i class="bi bi-geo-alt-fill me-2"></i>Your City, Your State</li>
+                        <li><i class="bi bi-telephone-fill me-2"></i>+91 00000 00000</li>
+                        <li><i class="bi bi-envelope-fill me-2"></i>contact@foodiehub.local</li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h6 class="fw-bold mb-3">Opening Hours</h6>
+                    <ul class="list-unstyled">
+                        <li>Mon - Fri: 9:00 AM - 11:00 PM</li>
+                        <li>Sat - Sun: 10:00 AM - 12:00 AM</li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="bg-secondary my-4">
+            <div class="text-center">
+                <small>&copy; 2026 FoodieHub. All rights reserved.</small>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="../js/ui-enhancements.js"></script>
+    <script src="../js/auth.js?v=20260217c"></script>
+    <script src="../js/app.js?v=20260218b"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+

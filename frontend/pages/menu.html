@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#ff6f4d">
+    <link rel="manifest" href="../manifest.webmanifest">
+    <title>FoodieHub - Menu</title>
+    <link href="../bootstrap/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/advanced-ui.css">
+    <link rel="icon" href="../assets/Main/logo.webp" type="image/webp">
+    <style>
+        .menu-toolbar {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 1rem;
+            padding: 1rem;
+        }
+
+        .menu-filter-btn {
+            border-radius: 999px;
+            margin: 0.2rem;
+        }
+
+        .menu-item-hidden {
+            display: none;
+        }
+
+        .menu-tag {
+            font-size: 0.75rem;
+            letter-spacing: 0.04em;
+        }
+
+        .menu-meta {
+            font-size: 0.82rem;
+            color: #9fb0bf;
+        }
+
+        .menu-result-box {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 0.8rem;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .menu-empty {
+            display: none;
+            text-align: center;
+            padding: 2.5rem 1rem;
+            border: 1px dashed rgba(255, 255, 255, 0.22);
+            border-radius: 1rem;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .menu-empty.show {
+            display: block;
+        }
+
+        .newsletter-section {
+            background:
+                radial-gradient(circle at 12% 18%, rgba(255, 166, 98, 0.2), transparent 36%),
+                radial-gradient(circle at 86% 80%, rgba(52, 152, 219, 0.18), transparent 34%),
+                linear-gradient(135deg, #0e1623 0%, #0a1019 55%, #08111d 100%);
+        }
+
+        .newsletter-shell {
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 1.2rem;
+            overflow: hidden;
+            background: linear-gradient(120deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+            box-shadow: 0 32px 42px -30px rgba(0, 0, 0, 0.7);
+        }
+
+        .newsletter-left {
+            padding: 2.1rem 1.4rem;
+            color: #e8f1fb;
+        }
+
+        .newsletter-eyebrow {
+            display: inline-block;
+            font-size: 0.72rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #ffd7a6;
+            border: 1px solid rgba(255, 215, 166, 0.4);
+            border-radius: 999px;
+            padding: 0.2rem 0.65rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .newsletter-title {
+            color: #f7fbff;
+            margin-bottom: 0.55rem;
+        }
+
+        .newsletter-copy {
+            color: #afc0d4;
+            margin-bottom: 1rem;
+            max-width: 32rem;
+        }
+
+        .newsletter-points {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.55rem;
+        }
+
+        .newsletter-point {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.32rem;
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.04);
+            color: #d6e3f0;
+            font-size: 0.82rem;
+            padding: 0.28rem 0.65rem;
+        }
+
+        .newsletter-point i {
+            color: #ffb76d;
+        }
+
+        .newsletter-form-card {
+            height: 100%;
+            background: rgba(6, 10, 16, 0.76);
+            border-left: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 2.1rem 1.4rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .newsletter-input {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #f8fbff;
+            min-height: 52px;
+        }
+
+        .newsletter-input::placeholder {
+            color: #9db0c4;
+        }
+
+        .newsletter-input:focus {
+            background: rgba(255, 255, 255, 0.12);
+            color: #fff;
+            border-color: rgba(255, 133, 96, 0.75);
+            box-shadow: 0 0 0 0.2rem rgba(255, 133, 96, 0.2);
+        }
+
+        .newsletter-btn {
+            min-height: 52px;
+            background: linear-gradient(135deg, #ff845f 0%, #ff5f43 100%);
+            border: 0;
+            font-weight: 700;
+        }
+
+        .newsletter-btn:hover {
+            background: linear-gradient(135deg, #ff7851 0%, #ff5134 100%);
+        }
+
+        .newsletter-note {
+            color: #8ea3b9;
+            font-size: 0.82rem;
+            margin-top: 0.65rem;
+        }
+
+        @media (max-width: 991.98px) {
+            .newsletter-form-card {
+                border-left: 0;
+                border-top: 1px solid rgba(255, 255, 255, 0.12);
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm sticky-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="./home.html">
+                <img src="../assets/Main/logo.webp" alt="FoodieHub Logo" width="40" height="40" class="d-inline-block align-text-top me-2">
+                FoodieHub
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="./home.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="./menu.html">Menu</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./about.html">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./contact.html">Contact</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./orders.html">Orders</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-outline-warning ms-2" href="./cart.html">View Cart <span id="navCartCount" class="badge bg-dark ms-1">0</span></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section class="bg-light py-5 hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-4 mb-lg-0">
+                    <h1 class="display-4 fw-bold mb-3">Menu Built for Every Craving</h1>
+                    <p class="lead mb-4">From comfort food to clean plates, choose your category and order in a few clicks. Every dish is prepared fresh and packed fast.</p>
+                    <a href="#menu-grid" class="btn btn-primary btn-lg me-2">Browse Dishes</a>
+                    <a href="./checkout.html" class="btn btn-outline-secondary btn-lg">Go To Checkout</a>
+                </div>
+                <div class="col-lg-6 text-center">
+                    <img src="../assets/items/item-027.webp" alt="Variety of food dishes" class="img-fluid rounded shadow-lg hero-img">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-5 bg-light" id="why-choose-us">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold">Plan Your Order in 3 Easy Steps</h2>
+                <p class="text-muted">Quick workflow, clear pricing, and no confusion.</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm text-center p-4">
+                        <div class="mb-3"><img src="../assets/Choose_us/Ingredients.webp" alt="Pick meals" width="60"></div>
+                        <h5 class="card-title">1. Pick Your Meals</h5>
+                        <p class="card-text">Use filters to quickly find vegetarian, non-veg, sweet, or premium plates.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm text-center p-4">
+                        <div class="mb-3"><img src="../assets/Choose_us/Support.webp" alt="Customize order" width="60"></div>
+                        <h5 class="card-title">2. Customize & Add</h5>
+                        <p class="card-text">Choose your favorites, set quantity, and keep track of your cart total.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm text-center p-4">
+                        <div class="mb-3"><img src="../assets/Choose_us/Delivery.webp" alt="Fast delivery" width="60"></div>
+                        <h5 class="card-title">3. Get It Delivered</h5>
+                        <p class="card-text">Secure checkout and fast handoff from kitchen to your doorstep.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-5 bg-white" id="featured-food">
+        <div class="container" id="menu-grid">
+            <div class="text-center mb-4">
+                <h2 class="fw-bold">Full Menu</h2>
+                <p class="text-muted">High-quality meals, premium ingredients, and transparent pricing.</p>
+            </div>
+
+            <div class="menu-toolbar mb-4">
+                <div class="row g-3 align-items-center">
+                    <div class="col-lg-7">
+                        <div class="d-flex flex-wrap">
+                            <button class="btn btn-outline-primary menu-filter-btn active" data-filter="all">All</button>
+                            <button class="btn btn-outline-primary menu-filter-btn" data-filter="veg">Vegetarian</button>
+                            <button class="btn btn-outline-primary menu-filter-btn" data-filter="nonveg">Non-Veg</button>
+                            <button class="btn btn-outline-primary menu-filter-btn" data-filter="sweet">Desserts</button>
+                            <button class="btn btn-outline-primary menu-filter-btn" data-filter="quick">Quick Bites</button>
+                            <button class="btn btn-outline-primary menu-filter-btn" data-filter="premium">Premium</button>
+                        </div>
+                    </div>
+                    <div class="col-lg-5">
+                        <div class="d-flex gap-2">
+                            <input type="search" id="menuSearch" class="form-control form-control-lg" placeholder="Search dishes, e.g. sushi, pasta, brownie">
+                            <select id="menuSort" class="form-select form-select-lg" aria-label="Sort dishes">
+                                <option value="featured" selected>Sort</option>
+                                <option value="price-low">Price: Low to High</option>
+                                <option value="price-high">Price: High to Low</option>
+                                <option value="name-asc">Name: A to Z</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-result-box mb-4">
+                <span id="menuResultText" class="small text-light">Showing 12 dishes</span>
+                <button id="menuResetBtn" class="btn btn-sm btn-outline-secondary">Reset Filters</button>
+            </div>
+
+            <div class="row g-4" id="menuItems">
+                <div class="col-md-6 col-lg-4 menu-item" data-category="veg quick" data-name="Margherita Pizza" data-price="520">
+                    <div class="card h-100 shadow-sm border-0">
+                        <img src="../assets/Food_items/Margherita_Pizza.webp" class="card-img-top" alt="Margherita Pizza">
+                        <div class="card-body">
+                            <span class="badge bg-success menu-tag mb-2">VEGETARIAN</span>
+                            <h5 class="card-title">Margherita Pizza</h5>
+                            <p class="card-text">Fresh basil, tomato sauce, mozzarella, and a crispy baked crust.</p>
+                            <p class="menu-meta mb-2"><i class="bi bi-stopwatch"></i> 22-28 min</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fw-bold text-success">&#8377;520</span>
+                                <button type="button" class="btn btn-sm btn-outline-primary add-to-cart">Add To Cart</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-4 menu-item" data-category="nonveg quick" data-name="Smash Chicken Burger" data-price="690">
+                    <div class="card h-100 shadow-sm border-0">
+                        <img src="../assets/items/item-028.webp" class="card-img-top" alt="Smash Chicken Burger">
+                        <div class="card-body">
+                            <span class="badge bg-danger menu-tag mb-2">NON-VEG</span>
+                            <h5 class="card-title">Smash Chicken Burger</h5>
+                            <p class="card-text">Juicy grilled chicken, cheddar, lettuce, and house sauce.</p>
+                            <p class="menu-meta mb-2"><i class="bi bi-stopwatch"></i> 18-24 min</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fw-bold text-success">&#8377;690</span>
+                                <button type="button" class="btn btn-sm btn-outline-primary add-to-cart">Add To Cart</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-4 menu-item" data-category="veg premium" data-name="Creamy Alfredo Pasta" data-price="640">
+                    <div class="card h-100 shadow-sm border-0">
+                        <img src="../assets/Food_items/Spaghetti_Alfredo.webp" class="card-img-top" alt="Creamy Alfredo Pasta">
+                        <div class="card-body">
+                            <span class="badge bg-success menu-tag mb-2">VEGETARIAN</span>
+                            <h5 class="card-title">Creamy Alfredo Pasta</h5>
+                            <p class="card-text">Silky parmesan cream sauce tossed with perfectly cooked pasta.</p>
+                            <p class="menu-meta mb-2"><i class="bi bi-stopwatch"></i> 20-26 min</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fw-bold text-success">&#8377;640</span>
+                                <button type="button" class="btn btn-sm btn-outline-primary add-to-cart">Add To Cart</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-4 menu-item" data-category="nonveg premium" data-name="Sushi Signature Box" data-price="980">
+                    <div class="card h-100 shadow-sm border-0">
+                        <img src="../assets/items/item-029.webp" class="card-img-top" alt="Sushi Signature Box">
+                        <div class="card-body">
+                            <span class="badge bg-danger menu-tag mb-2">NON-VEG</span>
+                            <h5 class="card-title">Sushi Signature Box</h5>
+                            <p class="card-text">Assorted sushi rolls with premium cuts and fresh sides.</p>
+                            <p class="menu-meta mb-2"><i class="bi bi-stopwatch"></i> 25-32 min</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fw-bold text-success">&#8377;980</span>
+                                <button type="button" class="btn btn-sm btn-outline-primary add-to-cart">Add To Cart</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-4 menu-item" data-category="nonveg premium" data-name="Herb Butter Steak" data-price="1180">
+                    <div class="card h-100 shadow-sm border-0">
+                        <img src="../assets/items/item-030.webp" class="card-img-top" alt="Herb Butter Steak">
+                        <div class="card-body">
+                            <span class="badge bg-warning text-dark menu-tag mb-2">PREMIUM</span>
+                            <h5 class="card-title">Herb Butter Steak</h5>
+                            <p class="card-text">Pan-seared steak finished with garlic butter and herbs.</p>
+                            <p class="menu-meta mb-2"><i class="bi bi-stopwatch"></i> 28-35 min</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fw-bold text-success">&#8377;1180</span>
+                                <button type="button" class="btn btn-sm btn-outline-primary add-to-cart">Add To Cart</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-4 menu-item" data-category="sweet quick" data-name="Molten Choco Brownie" data-price="320">
+                    <div class="card h-100 shadow-sm border-0">
+                        <img src="../assets/Food_items/Choco_Lava_Cake.webp" class="card-img-top" alt="Molten Choco Brownie">
+                        <div class="card-body">
+                            <span class="badge bg-info text-dark menu-tag mb-2">DESSERT</span>
+                            <h5 class="card-title">Molten Choco Brownie</h5>
+                            <p class="card-text">Warm brownie center with dark chocolate and vanilla cream.</p>
+                            <p class="menu-meta mb-2"><i class="bi bi-stopwatch"></i> 12-16 min</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fw-bold text-success">&#8377;320</span>
+                                <button type="button" class="btn btn-sm btn-outline-primary add-to-cart">Add To Cart</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-4 menu-item" data-category="veg quick" data-name="Farm Fresh Salad Bowl" data-price="440">
+                    <div class="card h-100 shadow-sm border-0">
+                        <img src="../assets/Food_items/Veggie_Salad.webp" class="card-img-top" alt="Farm Fresh Salad Bowl">
+                        <div class="card-body">
+                            <span class="badge bg-success menu-tag mb-2">VEGETARIAN</span>
+                            <h5 class="card-title">Farm Fresh Salad Bowl</h5>
+                            <p class="card-text">Crisp greens, nuts, tomatoes, and a citrus olive dressing.</p>
+                            <p class="menu-meta mb-2"><i class="bi bi-stopwatch"></i> 10-15 min</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fw-bold text-success">&#8377;440</span>
+                                <button type="button" class="btn btn-sm btn-outline-primary add-to-cart">Add To Cart</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-4 menu-item" data-category="nonveg premium" data-name="Fire Grill Chicken Plate" data-price="860">
+                    <div class="card h-100 shadow-sm border-0">
+                        <img src="../assets/items/item-031.webp" class="card-img-top" alt="Fire Grill Chicken Plate">
+                        <div class="card-body">
+                            <span class="badge bg-danger menu-tag mb-2">NON-VEG</span>
+                            <h5 class="card-title">Fire Grill Chicken Plate</h5>
+                            <p class="card-text">Smoky grilled chicken served with roasted vegetables.</p>
+                            <p class="menu-meta mb-2"><i class="bi bi-stopwatch"></i> 22-30 min</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fw-bold text-success">&#8377;860</span>
+                                <button type="button" class="btn btn-sm btn-outline-primary add-to-cart">Add To Cart</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-4 menu-item" data-category="veg quick" data-name="Spicy Veggie Tacos" data-price="480">
+                    <div class="card h-100 shadow-sm border-0">
+                        <img src="../assets/items/item-032.webp" class="card-img-top" alt="Spicy Veggie Tacos">
+                        <div class="card-body">
+                            <span class="badge bg-success menu-tag mb-2">VEGETARIAN</span>
+                            <h5 class="card-title">Spicy Veggie Tacos</h5>
+                            <p class="card-text">Soft tacos loaded with beans, corn salsa, and chipotle mayo.</p>
+                            <p class="menu-meta mb-2"><i class="bi bi-stopwatch"></i> 15-20 min</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fw-bold text-success">&#8377;480</span>
+                                <button type="button" class="btn btn-sm btn-outline-primary add-to-cart">Add To Cart</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-4 menu-item" data-category="nonveg premium" data-name="Ramen Chicken Bowl" data-price="790">
+                    <div class="card h-100 shadow-sm border-0">
+                        <img src="../assets/items/item-033.webp" class="card-img-top" alt="Ramen Chicken Bowl">
+                        <div class="card-body">
+                            <span class="badge bg-danger menu-tag mb-2">NON-VEG</span>
+                            <h5 class="card-title">Ramen Chicken Bowl</h5>
+                            <p class="card-text">Umami broth, noodles, chicken slices, and soft-boiled egg.</p>
+                            <p class="menu-meta mb-2"><i class="bi bi-stopwatch"></i> 20-25 min</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fw-bold text-success">&#8377;790</span>
+                                <button type="button" class="btn btn-sm btn-outline-primary add-to-cart">Add To Cart</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-4 menu-item" data-category="nonveg quick" data-name="Smoked Club Sandwich" data-price="720">
+                    <div class="card h-100 shadow-sm border-0">
+                        <img src="../assets/items/item-034.webp" class="card-img-top" alt="Smoked Club Sandwich">
+                        <div class="card-body">
+                            <span class="badge bg-danger menu-tag mb-2">NON-VEG</span>
+                            <h5 class="card-title">Smoked Club Sandwich</h5>
+                            <p class="card-text">Layered sandwich with smoked meat, lettuce, and cheese.</p>
+                            <p class="menu-meta mb-2"><i class="bi bi-stopwatch"></i> 14-19 min</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fw-bold text-success">&#8377;720</span>
+                                <button type="button" class="btn btn-sm btn-outline-primary add-to-cart">Add To Cart</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-4 menu-item" data-category="sweet premium" data-name="Berry Cheesecake Slice" data-price="410">
+                    <div class="card h-100 shadow-sm border-0">
+                        <img src="../assets/items/item-035.webp" class="card-img-top" alt="Berry Cheesecake Slice">
+                        <div class="card-body">
+                            <span class="badge bg-info text-dark menu-tag mb-2">DESSERT</span>
+                            <h5 class="card-title">Berry Cheesecake Slice</h5>
+                            <p class="card-text">Creamy cheesecake topped with berry compote and crumble.</p>
+                            <p class="menu-meta mb-2"><i class="bi bi-stopwatch"></i> 12-18 min</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fw-bold text-success">&#8377;410</span>
+                                <button type="button" class="btn btn-sm btn-outline-primary add-to-cart">Add To Cart</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div id="menuEmptyState" class="menu-empty mt-4">
+                <h5 class="mb-2">No dishes found</h5>
+                <p class="text-muted mb-3">Try a different keyword or reset filters to view all dishes.</p>
+                <button class="btn btn-outline-primary" id="menuEmptyResetBtn">Reset Filters</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-5 bg-light" id="blog">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold">Chef Combos & Limited Sets</h2>
+                <p class="text-muted">Value bundles designed to maximize taste and save more.</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card h-100 shadow-sm border-0">
+                        <img src="../assets/items/item-036.webp" class="card-img-top" alt="Lunch combo">
+                        <div class="card-body">
+                            <h5 class="card-title">Power Lunch Combo</h5>
+                            <p class="card-text">Main course + side + drink with a fast-lane delivery tag.</p>
+                            <a href="./checkout.html" class="btn btn-link p-0">Add Combo <i class="bi bi-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100 shadow-sm border-0">
+                        <img src="../assets/items/item-037.webp" class="card-img-top" alt="Family dinner combo">
+                        <div class="card-body">
+                            <h5 class="card-title">Family Dinner Pack</h5>
+                            <p class="card-text">Three mains, two sides, and dessert built for shared tables.</p>
+                            <a href="./checkout.html" class="btn btn-link p-0">Add Combo <i class="bi bi-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100 shadow-sm border-0">
+                        <img src="../assets/items/item-038.webp" class="card-img-top" alt="Weekend special platter">
+                        <div class="card-body">
+                            <h5 class="card-title">Weekend Special Platter</h5>
+                            <p class="card-text">Curated chef selection available Friday to Sunday only.</p>
+                            <a href="./checkout.html" class="btn btn-link p-0">Add Combo <i class="bi bi-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-5 bg-light" id="faq">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold">Menu FAQ</h2>
+                <p class="text-muted">Quick answers before you place your order.</p>
+            </div>
+            <div class="accordion" id="faqAccordion">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faq1">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1" aria-expanded="true" aria-controls="collapse1">
+                            Are dish prices inclusive of tax?
+                        </button>
+                    </h2>
+                    <div id="collapse1" class="accordion-collapse collapse show" aria-labelledby="faq1" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Taxes and delivery charges are calculated clearly during checkout.
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faq2">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="false" aria-controls="collapse2">
+                            Can I remove ingredients from a dish?
+                        </button>
+                    </h2>
+                    <div id="collapse2" class="accordion-collapse collapse" aria-labelledby="faq2" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Yes, add customization notes at checkout and our kitchen will follow them when possible.
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faq3">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3" aria-expanded="false" aria-controls="collapse3">
+                            Do menu items change daily?
+                        </button>
+                    </h2>
+                    <div id="collapse3" class="accordion-collapse collapse" aria-labelledby="faq3" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Core items stay available while chef specials rotate based on seasonal ingredients.
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faq4">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse4" aria-expanded="false" aria-controls="collapse4">
+                            Can I reorder past favorites quickly?
+                        </button>
+                    </h2>
+                    <div id="collapse4" class="accordion-collapse collapse" aria-labelledby="faq4" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Yes, saved orders can be repeated in one tap from your account history.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="newsletter-section py-5">
+        <div class="container">
+            <div class="newsletter-shell">
+                <div class="row g-0 align-items-stretch">
+                    <div class="col-lg-7">
+                        <div class="newsletter-left">
+                            <span class="newsletter-eyebrow">FoodieHub Insider</span>
+                            <h2 class="fw-bold newsletter-title">Food updates worth opening</h2>
+                            <p class="newsletter-copy">Join the list for launch-day menus, flash deals, and chef specials before they go public.</p>
+                            <div class="newsletter-points">
+                                <span class="newsletter-point"><i class="bi bi-patch-check-fill"></i> Weekly offers</span>
+                                <span class="newsletter-point"><i class="bi bi-bell-fill"></i> New dish alerts</span>
+                                <span class="newsletter-point"><i class="bi bi-shield-check"></i> No spam</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-5">
+                        <div class="newsletter-form-card">
+                            <form class="row g-2">
+                                <div class="col-12">
+                                    <input type="email" class="form-control form-control-lg newsletter-input" placeholder="Enter your email address" required>
+                                </div>
+                                <div class="col-12">
+                                    <button type="submit" class="btn newsletter-btn btn-lg w-100">Subscribe Now</button>
+                                </div>
+                            </form>
+                            <small class="newsletter-note">Unsubscribe anytime. We send only relevant food updates.</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section><footer class="bg-dark text-light pt-5 pb-3">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <h5 class="fw-bold mb-3">FoodieHub</h5>
+                    <p>Freshly made meals delivered with speed and consistency.</p>
+                    <div class="d-flex gap-2">
+                        <a href="#" class="text-light fs-4"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="text-light fs-4"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="text-light fs-4"><i class="bi bi-twitter-x"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-2 mb-4 mb-md-0">
+                    <h6 class="fw-bold mb-3">Quick Links</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="./home.html" class="text-light text-decoration-none">Home</a></li>
+                        <li><a href="./menu.html" class="text-light text-decoration-none">Menu</a></li>
+                        <li><a href="./about.html" class="text-light text-decoration-none">About</a></li>
+                        <li><a href="./contact.html" class="text-light text-decoration-none">Contact</a></li>
+                        <li><a href="./orders.html" class="text-light text-decoration-none">Orders</a></li>
+                        <li><a href="./checkout.html" class="text-light text-decoration-none">Checkout</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3 mb-4 mb-md-0">
+                    <h6 class="fw-bold mb-3">Contact Us</h6>
+                    <ul class="list-unstyled">
+                        <li><i class="bi bi-geo-alt-fill me-2"></i>Your City, Your State</li>
+                        <li><i class="bi bi-telephone-fill me-2"></i>+91 00000 00000</li>
+                        <li><i class="bi bi-envelope-fill me-2"></i>contact@foodiehub.local</li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h6 class="fw-bold mb-3">Opening Hours</h6>
+                    <ul class="list-unstyled">
+                        <li>Mon - Fri: 9:00 AM - 11:00 PM</li>
+                        <li>Sat - Sun: 10:00 AM - 12:00 AM</li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="bg-secondary my-4">
+            <div class="text-center">
+                <small>&copy; 2026 FoodieHub. All rights reserved.</small>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="../js/ui-enhancements.js"></script>
+    <script src="../js/auth.js?v=20260217c"></script>
+    <script src="../js/app.js?v=20260218b"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

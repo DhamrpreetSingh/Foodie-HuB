@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#ff6f4d">
+    <link rel="manifest" href="../../manifest.webmanifest">
+    <title>FoodieHub - Desserts Menu</title>
+    <link href="../../bootstrap/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/advanced-ui.css">
+    <link rel="icon" href="../../assets/Main/logo.webp" type="image/webp">
+    <style>
+        .category-hero {
+            background:
+                radial-gradient(circle at 16% 22%, rgba(255, 193, 7, 0.24), transparent 36%),
+                radial-gradient(circle at 82% 20%, rgba(255, 99, 68, 0.14), transparent 28%),
+                linear-gradient(145deg, #181109, #120d06) !important;
+        }
+
+        .des-panel {
+            background: linear-gradient(145deg, rgba(31, 23, 14, 0.96), rgba(22, 16, 10, 0.96));
+            border: 1px solid rgba(255, 214, 138, 0.18);
+            border-radius: 1rem;
+            backdrop-filter: blur(12px);
+            color: #f5ecdd;
+            padding: 1rem;
+            box-shadow: 0 16px 30px -18px rgba(0, 0, 0, 0.62);
+        }
+
+        #des-main {
+            background:
+                radial-gradient(circle at 85% 16%, rgba(255, 193, 7, 0.14), transparent 30%),
+                radial-gradient(circle at 15% 82%, rgba(255, 99, 68, 0.1), transparent 35%),
+                linear-gradient(145deg, #19130b, #130e08);
+        }
+
+        .des-chip-wrap {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .des-chip {
+            border: 1px solid rgba(255, 214, 138, 0.26);
+            border-radius: 999px;
+            background: rgba(255, 214, 138, 0.09);
+            color: #ffe8be;
+            padding: 0.25rem 0.7rem;
+            font-size: 0.78rem;
+        }
+
+        .category-shell {
+            width: min(100%, 1320px);
+        }
+
+        .toolbar {
+            display: grid;
+            grid-template-columns: 1.3fr 1fr;
+            gap: 0.7rem;
+        }
+
+        .filter-wrap {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.45rem;
+        }
+
+        .filter-btn {
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            background: rgba(255, 255, 255, 0.04);
+            color: #f0e0c8;
+            padding: 0.35rem 0.75rem;
+            font-size: 0.84rem;
+        }
+
+        .filter-btn.active {
+            border-color: rgba(255, 193, 7, 0.72);
+            background: rgba(255, 193, 7, 0.2);
+            color: #fff1cf;
+        }
+
+        .des-item-hidden {
+            display: none;
+        }
+
+        .des-card {
+            background: linear-gradient(145deg, rgba(38, 28, 18, 0.95), rgba(26, 19, 13, 0.95));
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 1rem;
+            overflow: hidden;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+            height: 100%;
+        }
+
+        .des-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255, 193, 7, 0.45);
+        }
+
+        .des-card img {
+            width: 100%;
+            height: 190px;
+            object-fit: cover;
+        }
+
+        .des-meta {
+            color: #c7b189;
+            font-size: 0.82rem;
+        }
+
+        .des-badge {
+            font-size: 0.72rem;
+            letter-spacing: 0.04em;
+        }
+
+        #desItems {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        #desItems > .des-item {
+            width: auto;
+            max-width: none;
+            padding: 0;
+        }
+
+        .result-box {
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 0.8rem;
+            padding: 0.65rem 0.85rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.7rem;
+        }
+
+        .empty-state {
+            display: none;
+            text-align: center;
+            border: 1px dashed rgba(255, 255, 255, 0.22);
+            border-radius: 1rem;
+            padding: 2.2rem 1rem;
+        }
+
+        .empty-state.show {
+            display: block;
+        }
+
+        .mini-toast {
+            position: fixed;
+            right: 16px;
+            bottom: 16px;
+            z-index: 1200;
+            background: #3a2d14;
+            color: #ffe7b6;
+            border: 1px solid #9a7b31;
+            border-radius: 0.7rem;
+            padding: 0.55rem 0.85rem;
+            display: none;
+        }
+
+        .mini-toast.show {
+            display: block;
+        }
+
+        @media (max-width: 991.98px) {
+            .toolbar {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (min-width: 992px) and (max-width: 1600px) {
+            .category-shell {
+                width: min(100%, 1240px);
+            }
+
+            .des-card img {
+                height: 210px;
+            }
+        }
+
+        @media (max-width: 575.98px) {
+            #desItems {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm sticky-top">
+        <div class="container category-shell">
+            <a class="navbar-brand fw-bold" href="../home.html">
+                <img src="../../assets/Main/logo.webp" alt="FoodieHub Logo" width="40" height="40" class="d-inline-block align-text-top me-2">
+                FoodieHub
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="../home.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="../menu.html">Menu</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../about.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../contact.html">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../orders.html">Orders</a></li>
+                    <li class="nav-item"><a class="btn btn-outline-warning ms-2" href="../cart.html">View Cart <span id="navCartCount" class="badge bg-dark ms-1">0</span></a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section class="py-5 hero-section category-hero">
+        <div class="container">
+            <div class="row align-items-center g-4">
+                <div class="col-lg-7">
+                    <span class="badge bg-warning-subtle text-warning-emphasis border mb-2">CATEGORY: DESSERTS</span>
+                    <h1 class="display-5 fw-bold mb-3">Sweet Cravings, Solved Fast</h1>
+                    <p class="lead mb-4">Warm cakes, chilled treats, and creamy favorites crafted to finish every meal perfectly.</p>
+                    <div class="des-chip-wrap mb-4">
+                        <span class="des-chip"><i class="bi bi-stars me-1"></i>Chef Specials</span>
+                        <span class="des-chip"><i class="bi bi-lightning-charge me-1"></i>Quick Serve</span>
+                        <span class="des-chip"><i class="bi bi-cup-hot me-1"></i>Fresh Batch</span>
+                    </div>
+                    <a href="#des-grid" class="btn btn-primary btn-lg me-2">Browse Desserts</a>
+                    <a href="../cart.html" class="btn btn-outline-secondary btn-lg">Go To Cart</a>
+                </div>
+                <div class="col-lg-5">
+                    <div class="des-panel">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <strong>Category Stats</strong>
+                            <small class="text-muted">Updated live</small>
+                        </div>
+                        <div class="row g-2">
+                            <div class="col-4"><div class="des-chip text-center d-block"><strong id="statItems">10</strong><br><small>Dishes</small></div></div>
+                            <div class="col-4"><div class="des-chip text-center d-block"><strong id="statAvg">&#8377;0</strong><br><small>Avg Price</small></div></div>
+                            <div class="col-4"><div class="des-chip text-center d-block"><strong id="statEta">--</strong><br><small>ETA</small></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-5" id="des-main">
+        <div class="container category-shell" id="des-grid">
+            <div class="des-panel mb-3">
+                <div class="toolbar">
+                    <div>
+                        <div class="filter-wrap" id="filterWrap">
+                            <button class="filter-btn active" data-filter="all">All</button>
+                            <button class="filter-btn" data-filter="quick">Quick</button>
+                            <button class="filter-btn" data-filter="cold">Cold</button>
+                            <button class="filter-btn" data-filter="baked">Baked</button>
+                            <button class="filter-btn" data-filter="premium">Premium</button>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <input type="search" id="desSearch" class="form-control" placeholder="Search dessert e.g. brownie, cheesecake">
+                        <select id="desSort" class="form-select" aria-label="Sort desserts">
+                            <option value="featured" selected>Sort</option>
+                            <option value="price-low">Price Low to High</option>
+                            <option value="price-high">Price High to Low</option>
+                            <option value="name-asc">Name A to Z</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="des-panel mb-3">
+                <div class="result-box">
+                    <span id="resultText">Showing 10 dishes</span>
+                    <button id="resetBtn" class="btn btn-sm btn-outline-secondary">Reset</button>
+                </div>
+            </div>
+
+            <div class="row g-4" id="desItems">
+                <div class="col-md-6 col-lg-4 des-item" data-category="baked quick" data-name="Molten Choco Brownie" data-price="320" data-prep="14">
+                    <article class="des-card">
+                        <img src="../../assets/Food_items/Choco_Lava_Cake.webp" alt="Molten Choco Brownie">
+                        <div class="p-3">
+                            <span class="badge bg-warning text-dark des-badge mb-2">BAKED</span>
+                            <h5>Molten Choco Brownie</h5>
+                            <p class="mb-2">Warm brownie center with dark chocolate and vanilla cream.</p>
+                            <p class="des-meta mb-3"><i class="bi bi-stopwatch"></i> 12-16 min</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <strong class="text-success">&#8377;320</strong>
+                                <button class="btn btn-sm btn-outline-primary add-to-cart">Add To Cart</button>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="col-md-6 col-lg-4 des-item" data-category="cold premium" data-name="Berry Cheesecake Slice" data-price="410" data-prep="15">
+                    <article class="des-card">
+                        <img src="../../assets/items/item-001.webp" alt="Berry Cheesecake Slice">
+                        <div class="p-3">
+                            <span class="badge bg-info text-dark des-badge mb-2">PREMIUM</span>
+                            <h5>Berry Cheesecake Slice</h5>
+                            <p class="mb-2">Creamy cheesecake topped with berry compote and crumble.</p>
+                            <p class="des-meta mb-3"><i class="bi bi-stopwatch"></i> 12-18 min</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <strong class="text-success">&#8377;410</strong>
+                                <button class="btn btn-sm btn-outline-primary add-to-cart">Add To Cart</button>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="col-md-6 col-lg-4 des-item" data-category="cold" data-name="Mango Yogurt Cup" data-price="290" data-prep="10">
+                    <article class="des-card">
+                        <img src="../../assets/items/item-002.webp" alt="Mango Yogurt Cup">
+                        <div class="p-3">
+                            <span class="badge bg-primary des-badge mb-2">COLD</span>
+                            <h5>Mango Yogurt Cup</h5>
+                            <p class="mb-2">Chilled yogurt parfait layered with mango puree and granola.</p>
+                            <p class="des-meta mb-3"><i class="bi bi-stopwatch"></i> 8-12 min</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <strong class="text-success">&#8377;290</strong>
+                                <button class="btn btn-sm btn-outline-primary add-to-cart">Add To Cart</button>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="col-md-6 col-lg-4 des-item" data-category="baked" data-name="Cinnamon Apple Pie" data-price="360" data-prep="18">
+                    <article class="des-card">
+                        <img src="../../assets/items/item-003.webp" alt="Cinnamon Apple Pie">
+                        <div class="p-3">
+                            <span class="badge bg-warning text-dark des-badge mb-2">BAKED</span>
+                            <h5>Cinnamon Apple Pie</h5>
+                            <p class="mb-2">Flaky crust with soft apple filling and warm cinnamon aroma.</p>
+                            <p class="des-meta mb-3"><i class="bi bi-stopwatch"></i> 15-20 min</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <strong class="text-success">&#8377;360</strong>
+                                <button class="btn btn-sm btn-outline-primary add-to-cart">Add To Cart</button>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="col-md-6 col-lg-4 des-item" data-category="quick cold" data-name="Vanilla Ice Cream Scoop" data-price="250" data-prep="6">
+                    <article class="des-card">
+                        <img src="../../assets/items/item-004.webp" alt="Vanilla Ice Cream Scoop">
+                        <div class="p-3">
+                            <span class="badge bg-primary des-badge mb-2">COLD</span>
+                            <h5>Vanilla Ice Cream Scoop</h5>
+                            <p class="mb-2">Classic creamy vanilla scoop served chilled and smooth.</p>
+                            <p class="des-meta mb-3"><i class="bi bi-stopwatch"></i> 5-8 min</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <strong class="text-success">&#8377;250</strong>
+                                <button class="btn btn-sm btn-outline-primary add-to-cart">Add To Cart</button>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="col-md-6 col-lg-4 des-item" data-category="premium baked" data-name="Pistachio Baklava" data-price="470" data-prep="16">
+                    <article class="des-card">
+                        <img src="../../assets/items/item-005.webp" alt="Pistachio Baklava">
+                        <div class="p-3">
+                            <span class="badge bg-info text-dark des-badge mb-2">PREMIUM</span>
+                            <h5>Pistachio Baklava</h5>
+                            <p class="mb-2">Layered pastry packed with pistachio and honey syrup glaze.</p>
+                            <p class="des-meta mb-3"><i class="bi bi-stopwatch"></i> 13-18 min</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <strong class="text-success">&#8377;470</strong>
+                                <button class="btn btn-sm btn-outline-primary add-to-cart">Add To Cart</button>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="col-md-6 col-lg-4 des-item" data-category="quick" data-name="Chocolate Donut Duo" data-price="280" data-prep="9">
+                    <article class="des-card">
+                        <img src="../../assets/items/item-006.webp" alt="Chocolate Donut Duo">
+                        <div class="p-3">
+                            <span class="badge bg-secondary des-badge mb-2">QUICK</span>
+                            <h5>Chocolate Donut Duo</h5>
+                            <p class="mb-2">Two soft donuts with dark chocolate drizzle and sprinkles.</p>
+                            <p class="des-meta mb-3"><i class="bi bi-stopwatch"></i> 7-10 min</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <strong class="text-success">&#8377;280</strong>
+                                <button class="btn btn-sm btn-outline-primary add-to-cart">Add To Cart</button>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="col-md-6 col-lg-4 des-item" data-category="cold premium" data-name="Tiramisu Cup" data-price="450" data-prep="13">
+                    <article class="des-card">
+                        <img src="../../assets/items/item-007.webp" alt="Tiramisu Cup">
+                        <div class="p-3">
+                            <span class="badge bg-info text-dark des-badge mb-2">PREMIUM</span>
+                            <h5>Tiramisu Cup</h5>
+                            <p class="mb-2">Coffee-soaked layers with mascarpone cream and cocoa dust.</p>
+                            <p class="des-meta mb-3"><i class="bi bi-stopwatch"></i> 10-16 min</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <strong class="text-success">&#8377;450</strong>
+                                <button class="btn btn-sm btn-outline-primary add-to-cart">Add To Cart</button>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="col-md-6 col-lg-4 des-item" data-category="baked" data-name="Caramel Custard" data-price="340" data-prep="12">
+                    <article class="des-card">
+                        <img src="../../assets/items/item-008.webp" alt="Caramel Custard">
+                        <div class="p-3">
+                            <span class="badge bg-warning text-dark des-badge mb-2">BAKED</span>
+                            <h5>Caramel Custard</h5>
+                            <p class="mb-2">Silky custard topped with rich caramel glaze.</p>
+                            <p class="des-meta mb-3"><i class="bi bi-stopwatch"></i> 10-14 min</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <strong class="text-success">&#8377;340</strong>
+                                <button class="btn btn-sm btn-outline-primary add-to-cart">Add To Cart</button>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="col-md-6 col-lg-4 des-item" data-category="quick cold" data-name="Berry Sorbet" data-price="300" data-prep="7">
+                    <article class="des-card">
+                        <img src="../../assets/Gallery/pastry.webp" alt="Berry Sorbet">
+                        <div class="p-3">
+                            <span class="badge bg-primary des-badge mb-2">COLD</span>
+                            <h5>Berry Sorbet</h5>
+                            <p class="mb-2">Refreshing berry sorbet with bright sweet-tart flavor.</p>
+                            <p class="des-meta mb-3"><i class="bi bi-stopwatch"></i> 5-9 min</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <strong class="text-success">&#8377;300</strong>
+                                <button class="btn btn-sm btn-outline-primary add-to-cart">Add To Cart</button>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+
+            <div id="emptyState" class="des-panel empty-state mt-4">
+                <h5>No dessert matched</h5>
+                <p class="text-muted mb-3">Try another keyword or reset filters to view all items.</p>
+                <button class="btn btn-outline-primary" id="emptyResetBtn">Reset Filters</button>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-dark text-light pt-5 pb-3">
+        <div class="container">
+            <div class="text-center"><small>&copy; 2026 FoodieHub. All rights reserved.</small></div>
+        </div>
+    </footer>
+
+    <div class="mini-toast" id="miniToast">Added to cart</div>
+
+    <script src="../../bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="../../js/ui-enhancements.js"></script>
+    <script src="../../js/auth.js?v=20260217c"></script>
+    <script src="../../js/app.js?v=20260218b"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

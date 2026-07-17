@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#ff6f4d">
+    <link rel="manifest" href="../manifest.webmanifest">
+    <title>FoodieHub - Orders</title>
+    <link href="../bootstrap/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/advanced-ui.css">
+    <link rel="icon" href="../assets/Main/logo.webp" type="image/webp">
+    <style>
+        #orders-main {
+            color: #dce5ee;
+            background:
+                radial-gradient(circle at 12% 22%, rgba(255, 99, 68, 0.11), transparent 35%),
+                radial-gradient(circle at 86% 8%, rgba(52, 152, 219, 0.1), transparent 30%),
+                linear-gradient(145deg, #0d1217 0%, #090d12 100%);
+        }
+
+        .orders-hero-section {
+            background:
+                radial-gradient(circle at 14% 15%, rgba(255, 99, 68, 0.14), transparent 34%),
+                radial-gradient(circle at 82% 70%, rgba(52, 152, 219, 0.1), transparent 30%),
+                linear-gradient(145deg, #0a0f14 0%, #05090d 100%) !important;
+            min-height: auto;
+            padding: 3.5rem 0 2.75rem;
+            align-items: flex-start;
+        }
+
+        .orders-hero-section h1 {
+            margin-bottom: 0.85rem !important;
+        }
+
+        .orders-hero-section .lead {
+            margin-bottom: 0;
+            max-width: 38rem;
+        }
+
+        .orders-hero-actions {
+            display: flex;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .orders-hero-actions .btn {
+            margin: 0 !important;
+        }
+
+        @media (max-width: 991.98px) {
+            .orders-hero-section {
+                padding: 3rem 0 2.25rem;
+                align-items: center;
+            }
+
+            .orders-hero-actions {
+                justify-content: flex-start;
+            }
+        }
+
+        @media (max-width: 575.98px) {
+            .orders-hero-section {
+                padding: 2.5rem 0 2rem;
+            }
+        }
+
+        .orders-surface {
+            background: linear-gradient(145deg, rgba(16, 21, 27, 0.96), rgba(11, 15, 20, 0.96));
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 1rem;
+            padding: 1rem;
+            backdrop-filter: blur(10px);
+            color: #eaf0f6;
+            box-shadow: 0 18px 28px -18px rgba(0, 0, 0, 0.65);
+        }
+
+        .orders-surface .form-control {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            color: #f8fbff;
+        }
+
+        .orders-surface .form-control::placeholder {
+            color: #9fb0bf;
+        }
+
+        .orders-surface .form-control:focus {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 127, 102, 0.65);
+            box-shadow: 0 0 0 0.2rem rgba(255, 127, 102, 0.2);
+            color: #fff;
+        }
+
+        .result-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.04);
+            padding: 0.35rem 0.8rem;
+            font-size: 0.86rem;
+        }
+
+        .order-card {
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 0.9rem;
+            padding: 0.95rem;
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .order-items-preview {
+            color: #9fb0bf;
+            font-size: 0.9rem;
+            border: 1px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 0.7rem;
+            padding: 0.5rem 0.65rem;
+        }
+
+        .order-timeline {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 0.5rem;
+        }
+
+        .order-timeline-step {
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 0.7rem;
+            background: rgba(255, 255, 255, 0.03);
+            text-align: center;
+            padding: 0.45rem 0.35rem;
+            color: #9fb0bf;
+        }
+
+        .order-timeline-step .dot {
+            width: 0.55rem;
+            height: 0.55rem;
+            border-radius: 50%;
+            display: block;
+            margin: 0 auto 0.3rem;
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .order-timeline-step.active {
+            border-color: rgba(255, 127, 102, 0.62);
+            background: rgba(255, 127, 102, 0.16);
+            color: #ffe9e3;
+        }
+
+        .order-timeline-step.active .dot {
+            background: #ff8d75;
+            box-shadow: 0 0 0 4px rgba(255, 141, 117, 0.2);
+        }
+
+        .order-timeline.order-timeline-cancelled {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .order-timeline.order-timeline-cancelled .order-timeline-step.active {
+            border-color: rgba(255, 99, 99, 0.62);
+            background: rgba(255, 99, 99, 0.16);
+        }
+
+        .order-timeline.order-timeline-cancelled .order-timeline-step.active .dot {
+            background: #ff7070;
+            box-shadow: 0 0 0 4px rgba(255, 112, 112, 0.2);
+        }
+
+        .empty-state {
+            text-align: center;
+            border: 1px dashed rgba(255, 255, 255, 0.24);
+            border-radius: 0.9rem;
+            padding: 2rem 1rem;
+        }
+
+        .order-toast {
+            position: fixed;
+            right: 16px;
+            bottom: 16px;
+            z-index: 1200;
+            background: #163024;
+            color: #d7ffe9;
+            border: 1px solid #2c6c4d;
+            border-radius: 0.7rem;
+            padding: 0.55rem 0.85rem;
+            display: none;
+        }
+
+        .order-toast.show {
+            display: block;
+        }
+
+        @media (max-width: 767.98px) {
+            .order-timeline {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm sticky-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="./home.html">
+                <img src="../assets/Main/logo.webp" alt="FoodieHub Logo" width="40" height="40" class="d-inline-block align-text-top me-2">
+                FoodieHub
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="./home.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="./menu.html">Menu</a></li>
+                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="./orders.html">Orders</a></li>
+                    <li class="nav-item"><a class="nav-link" href="./about.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="./contact.html">Contact</a></li>
+                    <li class="nav-item"><a class="btn btn-outline-warning ms-2" href="./cart.html">Cart <span id="navCartCount" class="badge bg-dark ms-1">0</span></a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section class="py-5 hero-section orders-hero-section">
+        <div class="container">
+            <div class="row align-items-center g-4">
+                <div class="col-lg-8">
+                    <h1 class="display-5 fw-bold mb-3">Your Orders</h1>
+                    <p class="lead mb-0">Track each order step and reorder your favorites in one click.</p>
+                </div>
+                <div class="col-lg-4 text-lg-end">
+                    <div class="orders-hero-actions">
+                        <a href="./menu.html" class="btn btn-outline-secondary btn-lg">Browse Menu</a>
+                        <a href="./cart.html" class="btn btn-primary btn-lg">Go To Cart</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-5" id="orders-main">
+        <div class="container">
+            <div class="orders-surface mb-4">
+                <div class="row g-3 align-items-end">
+                    <div class="col-lg-8">
+                        <label for="orderSearch" class="form-label">Search by Order ID</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-dark text-light border-secondary"><i class="bi bi-search"></i></span>
+                            <input id="orderSearch" type="search" class="form-control" placeholder="Example: FH-123456">
+                            <button id="orderSearchReset" type="button" class="btn btn-outline-secondary">Clear</button>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 text-lg-end">
+                        <span class="result-chip" id="orderResultText"><i class="bi bi-receipt"></i> Showing 0 orders</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="ordersList" class="d-grid gap-3"></div>
+
+            <div id="ordersEmpty" class="orders-surface empty-state d-none">
+                <h4 class="mb-2">No orders found</h4>
+                <p class="text-muted mb-3">Place your first order from the menu and it will appear here.</p>
+                <a href="./menu.html" class="btn btn-outline-primary">Start Ordering</a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-dark text-light pt-5 pb-3">
+        <div class="container">
+            <div class="text-center"><small>&copy; 2026 FoodieHub. All rights reserved.</small></div>
+        </div>
+    </footer>
+
+    <div class="order-toast" id="orderToast">Order added to cart</div>
+
+    <script src="../bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="../js/ui-enhancements.js"></script>
+    <script src="../js/auth.js?v=20260217c"></script>
+    <script src="../js/app.js?v=20260218b"></script>
+</body>
+</html>
+
+
+
+
+
+

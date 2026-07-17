@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#ff6f4d">
+    <link rel="manifest" href="../manifest.webmanifest">
+    <title>FoodieHub - Home</title>
+    <link href="../bootstrap/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/advanced-ui.css">
+    <link rel="icon" href="../assets/Main/logo.webp" type="image/webp">
+    <style>
+        .newsletter-section {
+            background:
+                radial-gradient(circle at 12% 18%, rgba(255, 166, 98, 0.2), transparent 36%),
+                radial-gradient(circle at 86% 80%, rgba(52, 152, 219, 0.18), transparent 34%),
+                linear-gradient(135deg, #0e1623 0%, #0a1019 55%, #08111d 100%);
+        }
+
+        .newsletter-shell {
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 1.2rem;
+            overflow: hidden;
+            background: linear-gradient(120deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+            box-shadow: 0 32px 42px -30px rgba(0, 0, 0, 0.7);
+        }
+
+        .newsletter-left {
+            padding: 2.1rem 1.4rem;
+            color: #e8f1fb;
+        }
+
+        .newsletter-eyebrow {
+            display: inline-block;
+            font-size: 0.72rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #ffd7a6;
+            border: 1px solid rgba(255, 215, 166, 0.4);
+            border-radius: 999px;
+            padding: 0.2rem 0.65rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .newsletter-title {
+            color: #f7fbff;
+            margin-bottom: 0.55rem;
+        }
+
+        .newsletter-copy {
+            color: #afc0d4;
+            margin-bottom: 1rem;
+            max-width: 32rem;
+        }
+
+        .newsletter-points {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.55rem;
+        }
+
+        .newsletter-point {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.32rem;
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.04);
+            color: #d6e3f0;
+            font-size: 0.82rem;
+            padding: 0.28rem 0.65rem;
+        }
+
+        .newsletter-point i {
+            color: #ffb76d;
+        }
+
+        .newsletter-form-card {
+            height: 100%;
+            background: rgba(6, 10, 16, 0.76);
+            border-left: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 2.1rem 1.4rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .newsletter-input {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #f8fbff;
+            min-height: 52px;
+        }
+
+        .newsletter-input::placeholder {
+            color: #9db0c4;
+        }
+
+        .newsletter-input:focus {
+            background: rgba(255, 255, 255, 0.12);
+            color: #fff;
+            border-color: rgba(255, 133, 96, 0.75);
+            box-shadow: 0 0 0 0.2rem rgba(255, 133, 96, 0.2);
+        }
+
+        .newsletter-btn {
+            min-height: 52px;
+            background: linear-gradient(135deg, #ff845f 0%, #ff5f43 100%);
+            border: 0;
+            font-weight: 700;
+        }
+
+        .newsletter-btn:hover {
+            background: linear-gradient(135deg, #ff7851 0%, #ff5134 100%);
+        }
+
+        .newsletter-note {
+            color: #8ea3b9;
+            font-size: 0.82rem;
+            margin-top: 0.65rem;
+        }
+
+        @media (max-width: 991.98px) {
+            .newsletter-form-card {
+                border-left: 0;
+                border-top: 1px solid rgba(255, 255, 255, 0.12);
+            }
+        }
+
+        @media (max-width: 430px) {
+            .newsletter-left,
+            .newsletter-form-card {
+                padding: 1.2rem 0.95rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm sticky-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="./home.html">
+                <img src="../assets/Main/logo.webp" alt="FoodieHub Logo" width="40" height="40" class="d-inline-block align-text-top me-2">
+                FoodieHub
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="./home.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./menu.html">Menu</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./about.html">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./contact.html">Contact</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./orders.html">Orders</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-outline-warning ms-2" href="./cart.html">View Cart <span id="navCartCount" class="badge bg-dark ms-1">0</span></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section class="bg-light py-5 hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-4 mb-lg-0">
+                    <h1 class="display-4 fw-bold mb-3">Your Cravings, Timed Perfectly</h1>
+                    <p class="lead mb-4">Breakfast bowls, late-night snacks, and family-size meals ready in minutes. Pick your vibe and get it delivered hot.</p>
+                    <a href="./menu.html" class="btn btn-primary btn-lg me-2">Start Ordering</a>
+                    <a href="./checkout.html" class="btn btn-outline-secondary btn-lg">Quick Checkout</a>
+                </div>
+                <div class="col-lg-6 text-center">
+                    <img src="../assets/Main/main.webp" alt="Freshly prepared meal" class="img-fluid rounded shadow-lg hero-img">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-5 bg-light" id="why-choose-us">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold">Why People Reorder From FoodieHub</h2>
+                <p class="text-muted">Built for speed, consistency, and flavor every day.</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm text-center p-4">
+                        <div class="mb-3">
+                            <img src="../assets/Choose_us/Delivery.webp" alt="Fast drop-off" width="60">
+                        </div>
+                        <h5 class="card-title">Live Delivery Tracking</h5>
+                        <p class="card-text">Track your rider in real time from kitchen to doorstep.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm text-center p-4">
+                        <div class="mb-3">
+                            <img src="../assets/Choose_us/Ingredients.webp" alt="Fresh ingredients" width="60">
+                        </div>
+                        <h5 class="card-title">Chef-Curated Combos</h5>
+                        <p class="card-text">Balanced meals crafted by chefs for lunch, dinner, and cheat days.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm text-center p-4">
+                        <div class="mb-3">
+                            <img src="../assets/Choose_us/Support.webp" alt="Customer support" width="60">
+                        </div>
+                        <h5 class="card-title">Support That Responds</h5>
+                        <p class="card-text">Fast help for order changes, refunds, and delivery updates.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-5 bg-white" id="featured-food">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold">Tonight's Popular Picks</h2>
+                <p class="text-muted">Most ordered dishes in the last 24 hours.</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 shadow-sm border-0">
+                        <img src="../assets/Food_items/Chicken_Burger.webp" class="card-img-top" alt="Smoky Chicken Burger">
+                        <div class="card-body">
+                            <h5 class="card-title">Smoky Chicken Burger</h5>
+                            <p class="card-text">Chargrilled chicken, crispy lettuce, and chipotle aioli.</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fw-bold text-success">&#8377;690</span>
+                                <a href="./checkout.html" class="btn btn-sm btn-outline-primary">Order</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 shadow-sm border-0">
+                        <img src="../assets/Food_items/Margherita_Pizza.webp" class="card-img-top" alt="Classic margherita pizza">
+                        <div class="card-body">
+                            <h5 class="card-title">Classic Margherita</h5>
+                            <p class="card-text">Wood-fired base with basil, mozzarella, and rich tomato sauce.</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fw-bold text-success">&#8377;520</span>
+                                <a href="./checkout.html" class="btn btn-sm btn-outline-primary">Order</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 shadow-sm border-0">
+                        <img src="../assets/Food_items/Spaghetti_Alfredo.webp" class="card-img-top" alt="Creamy Alfredo pasta">
+                        <div class="card-body">
+                            <h5 class="card-title">Creamy Alfredo Pasta</h5>
+                            <p class="card-text">Garlic cream sauce, parmesan, and butter-finished spaghetti.</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fw-bold text-success">&#8377;640</span>
+                                <a href="./checkout.html" class="btn btn-sm btn-outline-primary">Order</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 shadow-sm border-0">
+                        <img src="../assets/Food_items/Veggie_Salad.webp" class="card-img-top" alt="Garden bowl salad">
+                        <div class="card-body">
+                            <h5 class="card-title">Garden Bowl Salad</h5>
+                            <p class="card-text">Greens, cherry tomatoes, olives, cucumbers, and lemon dressing.</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fw-bold text-success">&#8377;440</span>
+                                <a href="./checkout.html" class="btn btn-sm btn-outline-primary">Order</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 shadow-sm border-0">
+                        <img src="../assets/Food_items/Sushi_Platter.webp" class="card-img-top" alt="Deluxe sushi platter">
+                        <div class="card-body">
+                            <h5 class="card-title">Deluxe Sushi Set</h5>
+                            <p class="card-text">Assorted sushi rolls with avocado, seafood, and wasabi.</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fw-bold text-success">&#8377;980</span>
+                                <a href="./checkout.html" class="btn btn-sm btn-outline-primary">Order</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 shadow-sm border-0">
+                        <img src="../assets/Food_items/Choco_Lava_Cake.webp" class="card-img-top" alt="Molten lava cake">
+                        <div class="card-body">
+                            <h5 class="card-title">Molten Lava Cake</h5>
+                            <p class="card-text">Warm chocolate center with soft baked edges and rich flavor.</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fw-bold text-success">&#8377;320</span>
+                                <a href="./checkout.html" class="btn btn-sm btn-outline-primary">Order</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-5 bg-light" id="blog">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold">Start With a Food Mood</h2>
+                <p class="text-muted">Jump into the category that fits your day.</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card h-100 shadow-sm border-0">
+                        <img src="../assets/Gallery/bread.webp" class="card-img-top" alt="Comfort food category">
+                        <div class="card-body">
+                            <h5 class="card-title">Comfort Mode</h5>
+                            <p class="card-text">Warm meals, rich sauces, and slow-cooked favorites.</p>
+                            <a href="./category/vegetarian.html" class="btn btn-link p-0">Open Menu <i class="bi bi-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100 shadow-sm border-0">
+                        <img src="../assets/Gallery/steak.webp" class="card-img-top" alt="Protein rich menu category">
+                        <div class="card-body">
+                            <h5 class="card-title">Protein Focus</h5>
+                            <p class="card-text">High-protein dishes for gym days and active schedules.</p>
+                            <a href="./category/nonveg.html" class="btn btn-link p-0">Open Menu <i class="bi bi-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100 shadow-sm border-0">
+                        <img src="../assets/Gallery/pastry.webp" class="card-img-top" alt="Desserts and treats category">
+                        <div class="card-body">
+                            <h5 class="card-title">Sweet Ending</h5>
+                            <p class="card-text">Desserts and baked treats made for post-meal cravings.</p>
+                            <a href="./category/desserts.html" class="btn btn-link p-0">Open Menu <i class="bi bi-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-5 bg-white" id="testimonials">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold">Customer Reactions</h2>
+                <p class="text-muted">Recent reviews from regular FoodieHub users.</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm p-4">
+                        <div class="d-flex align-items-center mb-3">
+                            <img src="../assets/Testimonial/User 1.webp" alt="Customer Aisha" class="rounded-circle me-3" width="50" height="50">
+                            <div>
+                                <h6 class="mb-0">Priyanka</h6>
+                                <small class="text-muted">Chennai</small>
+                            </div>
+                        </div>
+                        <p class="card-text">"The late-night menu is excellent. Delivery was faster than expected."</p>
+                        <div><span class="text-warning">&#9733;&#9733;&#9733;&#9733;&#9733;</span></div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm p-4">
+                        <div class="d-flex align-items-center mb-3">
+                            <img src="../assets/Testimonial/User 2.webp" alt="Customer Daniel" class="rounded-circle me-3" width="50" height="50">
+                            <div>
+                                <h6 class="mb-0">Danish</h6>
+                                <small class="text-muted">Hyderabad</small>
+                            </div>
+                        </div>
+                        <p class="card-text">"Clean app flow, accurate order tracking, and the pasta is always good."</p>
+                        <div><span class="text-warning">&#9733;&#9733;&#9733;&#9733;&#9734;</span></div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm p-4">
+                        <div class="d-flex align-items-center mb-3">
+                            <img src="../assets/Testimonial/User 3.webp" alt="Customer Maya" class="rounded-circle me-3" width="50" height="50">
+                            <div>
+                                <h6 class="mb-0">Nikhil</h6>
+                                <small class="text-muted">Delhi</small>
+                            </div>
+                        </div>
+                        <p class="card-text">"Great variety for both healthy lunch and comfort dinner options."</p>
+                        <div><span class="text-warning">&#9733;&#9733;&#9733;&#9733;&#9733;</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-5 bg-light" id="faq">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold">Quick Answers</h2>
+                <p class="text-muted">Everything new users ask before their first order.</p>
+            </div>
+            <div class="accordion" id="faqAccordion">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faq1">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1" aria-expanded="true" aria-controls="collapse1">
+                            Is there a minimum order value?
+                        </button>
+                    </h2>
+                    <div id="collapse1" class="accordion-collapse collapse show" aria-labelledby="faq1" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Most zones have no minimum, but some offers activate above a small cart value.
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faq2">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="false" aria-controls="collapse2">
+                            Can I schedule delivery for later?
+                        </button>
+                    </h2>
+                    <div id="collapse2" class="accordion-collapse collapse" aria-labelledby="faq2" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Yes. During checkout, select "Schedule" and choose your preferred time slot.
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faq3">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3" aria-expanded="false" aria-controls="collapse3">
+                            Do you support dietary preferences?
+                        </button>
+                    </h2>
+                    <div id="collapse3" class="accordion-collapse collapse" aria-labelledby="faq3" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Yes. Use menu filters for vegetarian, non-vegetarian, and dessert categories.
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faq4">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse4" aria-expanded="false" aria-controls="collapse4">
+                            What if an item is missing?
+                        </button>
+                    </h2>
+                    <div id="collapse4" class="accordion-collapse collapse" aria-labelledby="faq4" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Reach out through support and we will resolve it quickly with refund or replacement.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-5 bg-white" id="partners">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold">Supply & Delivery Partners</h2>
+                <p class="text-muted">Trusted brands powering your everyday order quality.</p>
+            </div>
+            <div class="partners-slider" aria-label="Trusted partners logo slider">
+                <div class="partners-track">
+                    <div class="partner-logo-card">
+                        <img src="../assets/Partner/Farm_Fresh.webp" class="img-fluid" alt="Farm Fresh">
+                    </div>
+                    <div class="partner-logo-card">
+                        <img src="../assets/Partner/logistic.webp" class="img-fluid" alt="Fast Logistic">
+                    </div>
+                    <div class="partner-logo-card">
+                        <img src="../assets/Partner/global_foods.webp" class="img-fluid" alt="Global Foods">
+                    </div>
+                    <div class="partner-logo-card">
+                        <img src="../assets/Partner/Eco_Bite.webp" class="img-fluid" alt="Eco Bite">
+                    </div>
+                    <div class="partner-logo-card">
+                        <img src="../assets/Partner/pure_eats.webp" class="img-fluid" alt="Pure Eats">
+                    </div>
+                    <div class="partner-logo-card" aria-hidden="true">
+                        <img src="../assets/Partner/Farm_Fresh.webp" class="img-fluid" alt="">
+                    </div>
+                    <div class="partner-logo-card" aria-hidden="true">
+                        <img src="../assets/Partner/logistic.webp" class="img-fluid" alt="">
+                    </div>
+                    <div class="partner-logo-card" aria-hidden="true">
+                        <img src="../assets/Partner/global_foods.webp" class="img-fluid" alt="">
+                    </div>
+                    <div class="partner-logo-card" aria-hidden="true">
+                        <img src="../assets/Partner/Eco_Bite.webp" class="img-fluid" alt="">
+                    </div>
+                    <div class="partner-logo-card" aria-hidden="true">
+                        <img src="../assets/Partner/pure_eats.webp" class="img-fluid" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+   
+
+    <section class="newsletter-section py-5">
+        <div class="container">
+            <div class="newsletter-shell">
+                <div class="row g-0 align-items-stretch">
+                    <div class="col-lg-7">
+                        <div class="newsletter-left">
+                            <span class="newsletter-eyebrow">FoodieHub Insider</span>
+                            <h2 class="fw-bold newsletter-title">Food updates worth opening</h2>
+                            <p class="newsletter-copy">Join the list for launch-day menus, flash deals, and chef specials before they go public.</p>
+                            <div class="newsletter-points">
+                                <span class="newsletter-point"><i class="bi bi-patch-check-fill"></i> Weekly offers</span>
+                                <span class="newsletter-point"><i class="bi bi-bell-fill"></i> New dish alerts</span>
+                                <span class="newsletter-point"><i class="bi bi-shield-check"></i> No spam</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-5">
+                        <div class="newsletter-form-card">
+                            <form class="row g-3">
+                                <div class="col-12">
+                                    <input type="email" class="form-control form-control-lg newsletter-input" placeholder="Enter your email address" required>
+                                </div>
+                                <div class="col-12">
+                                    <button type="submit" class="btn newsletter-btn btn-lg w-100">Subscribe Now</button>
+                                </div>
+                            </form>
+                            <small class="newsletter-note">Unsubscribe anytime. We send only relevant food updates.</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section><footer class="bg-dark text-light pt-5 pb-3">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <h5 class="fw-bold mb-3">FoodieHub</h5>
+                    <p>Freshly made meals delivered with speed and consistency.</p>
+                    <div class="d-flex gap-2">
+                        <a href="#" class="text-light fs-4"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="text-light fs-4"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="text-light fs-4"><i class="bi bi-twitter-x"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-2 mb-4 mb-md-0">
+                    <h6 class="fw-bold mb-3">Quick Links</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="./home.html" class="text-light text-decoration-none">Home</a></li>
+                        <li><a href="./menu.html" class="text-light text-decoration-none">Menu</a></li>
+                        <li><a href="./about.html" class="text-light text-decoration-none">About</a></li>
+                        <li><a href="./contact.html" class="text-light text-decoration-none">Contact</a></li>
+                        <li><a href="./orders.html" class="text-light text-decoration-none">Orders</a></li>
+                        <li><a href="./checkout.html" class="text-light text-decoration-none">Checkout</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3 mb-4 mb-md-0">
+                    <h6 class="fw-bold mb-3">Contact Us</h6>
+                    <ul class="list-unstyled">
+                        <li><i class="bi bi-geo-alt-fill me-2"></i>Your City, Your State</li>
+                        <li><i class="bi bi-telephone-fill me-2"></i>+91 00000 00000</li>
+                        <li><i class="bi bi-envelope-fill me-2"></i>contact@foodiehub.local</li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h6 class="fw-bold mb-3">Opening Hours</h6>
+                    <ul class="list-unstyled">
+                        <li>Mon - Fri: 9:00 AM - 11:00 PM</li>
+                        <li>Sat - Sun: 10:00 AM - 12:00 AM</li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="bg-secondary my-4">
+            <div class="text-center">
+                <small>&copy; 2026 FoodieHub. All rights reserved.</small>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="../js/ui-enhancements.js"></script>
+    <script src="../js/auth.js?v=20260217c"></script>
+    <script src="../js/app.js?v=20260218b"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

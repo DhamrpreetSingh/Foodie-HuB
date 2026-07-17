@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#ff6f4d">
+    <link rel="manifest" href="../manifest.webmanifest">
+    <title>FoodieHub - Cart</title>
+    <link href="../bootstrap/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/advanced-ui.css">
+    <link rel="icon" href="../assets/Main/logo.webp" type="image/webp">
+    <style>
+        .cart-surface {
+            background: linear-gradient(145deg, rgba(16, 21, 27, 0.96), rgba(11, 15, 20, 0.96));
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 1rem;
+            backdrop-filter: blur(12px);
+            padding: 1rem;
+            color: #eaf0f6;
+            box-shadow: 0 18px 28px -18px rgba(0, 0, 0, 0.65);
+            transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        #cart-main {
+            color: #dce5ee;
+            background:
+                radial-gradient(circle at 12% 22%, rgba(255, 99, 68, 0.11), transparent 35%),
+                radial-gradient(circle at 86% 8%, rgba(52, 152, 219, 0.1), transparent 30%),
+                linear-gradient(145deg, #0d1217 0%, #090d12 100%);
+        }
+
+        .cart-hero-section {
+            background:
+                radial-gradient(circle at 14% 15%, rgba(255, 99, 68, 0.14), transparent 34%),
+                radial-gradient(circle at 82% 70%, rgba(52, 152, 219, 0.1), transparent 30%),
+                linear-gradient(145deg, #0a0f14 0%, #05090d 100%) !important;
+        }
+
+        .cart-surface h3,
+        .cart-surface h4,
+        .cart-surface h5,
+        .cart-surface h6,
+        .cart-surface strong,
+        .cart-surface .fw-semibold {
+            color: #f6faff;
+        }
+
+        .cart-surface .form-label,
+        .cart-surface .form-check-label {
+            color: #dce5ee;
+        }
+
+        .cart-surface .form-control,
+        .cart-surface .form-select {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            color: #f8fbff;
+        }
+
+        .cart-surface .form-select {
+            min-height: 42px;
+            line-height: 1.2;
+            padding-top: 0.45rem;
+            padding-bottom: 0.45rem;
+            padding-right: 2rem;
+            background-position: right 0.65rem center;
+            background-size: 14px 10px;
+            border-radius: 0.65rem;
+            font-size: 0.95rem;
+        }
+
+        .cart-surface .form-select option {
+            background: #ffffff;
+            color: #111111;
+        }
+
+        .cart-surface .form-label {
+            margin-bottom: 0.35rem;
+        }
+
+        .cart-surface .form-control::placeholder {
+            color: #a9b7c4;
+        }
+
+        .cart-surface .form-control:focus,
+        .cart-surface .form-select:focus {
+            background: rgba(255, 255, 255, 0.08);
+            color: #ffffff;
+            border-color: rgba(255, 127, 102, 0.65);
+            box-shadow: 0 0 0 0.2rem rgba(255, 127, 102, 0.2);
+        }
+
+        .cart-surface .text-muted {
+            color: #9fb0bf !important;
+        }
+
+        .cart-surface:hover {
+            transform: translateY(-2px);
+            border-color: rgba(255, 127, 102, 0.28);
+            box-shadow: 0 24px 34px -20px rgba(255, 99, 68, 0.28);
+        }
+
+        .cart-surface:focus-within {
+            transform: none;
+            border-color: rgba(255, 127, 102, 0.4);
+            box-shadow: 0 20px 32px -20px rgba(255, 99, 68, 0.22);
+        }
+
+        .summary-sticky:hover {
+            transform: none;
+        }
+
+        #deliverySelect,
+        #tipSelect {
+            margin-bottom: 0.75rem !important;
+        }
+
+        .assurance-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 0.7rem;
+        }
+
+        .assurance-chip {
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 0.8rem;
+            padding: 0.65rem;
+            text-align: center;
+            font-size: 0.84rem;
+        }
+
+        .assurance-chip i {
+            color: #ff9c88;
+            margin-right: 0.25rem;
+        }
+
+        .cart-insight-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 0.75rem;
+        }
+
+        .cart-insight {
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.8rem;
+            padding: 0.7rem;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .cart-insight .value {
+            font-weight: 700;
+            font-size: 1.1rem;
+            display: block;
+        }
+
+        .cart-item {
+            display: grid;
+            grid-template-columns: 84px 1fr auto;
+            gap: 0.9rem;
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 0.9rem;
+            padding: 0.8rem;
+            margin-bottom: 0.65rem;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .cart-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .cart-thumb {
+            width: 84px;
+            height: 84px;
+            object-fit: cover;
+            border-radius: 0.8rem;
+        }
+
+        .qty-control {
+            display: inline-flex;
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .qty-btn {
+            width: 34px;
+            height: 34px;
+            border: 0;
+            background: rgba(255, 255, 255, 0.06);
+            color: #fff;
+        }
+
+        .qty-value-input {
+            width: 48px;
+            text-align: center;
+            font-weight: 600;
+            background: transparent;
+            border: 0;
+            color: #fff;
+            outline: none;
+        }
+
+        .summary-line {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .summary-total {
+            border-top: 1px solid rgba(255, 255, 255, 0.12);
+            margin-top: 0.7rem;
+            padding-top: 0.8rem;
+            font-size: 1.05rem;
+            font-weight: 700;
+        }
+
+        .empty-state {
+            text-align: center;
+            border: 1px dashed rgba(255, 255, 255, 0.24);
+            border-radius: 1rem;
+            padding: 2.2rem 1rem;
+        }
+
+        .recommend-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 0.8rem;
+        }
+
+        .recommend-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 0.9rem;
+            overflow: hidden;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .recommend-card img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+        }
+
+        .recommend-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(255, 127, 102, 0.32);
+        }
+
+        .recommend-card .body {
+            padding: 0.7rem;
+        }
+
+        .coupon-chip-wrap {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.45rem;
+            margin-bottom: 0.7rem;
+        }
+
+        .coupon-chip {
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 0.22rem 0.7rem;
+            font-size: 0.77rem;
+            cursor: pointer;
+        }
+
+        .cart-action-notice {
+            border: 1px solid rgba(70, 156, 236, 0.45);
+            border-radius: 0.8rem;
+            background: rgba(70, 156, 236, 0.14);
+            color: #d9ecff;
+            padding: 0.6rem 0.8rem;
+            margin-bottom: 0.8rem;
+            animation: noticeIn 0.26s ease;
+        }
+
+        .saved-item {
+            border-style: dashed;
+            border-color: rgba(255, 255, 255, 0.22);
+        }
+
+        .coupon-suggestion-grid {
+            display: grid;
+            gap: 0.45rem;
+            margin-bottom: 0.7rem;
+        }
+
+        .coupon-suggestion {
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 0.75rem;
+            background: rgba(255, 255, 255, 0.02);
+            color: #dbe8f4;
+            text-align: left;
+            padding: 0.45rem 0.6rem;
+            display: grid;
+            line-height: 1.25;
+            transition: transform 0.18s ease, border-color 0.2s ease, background 0.2s ease;
+        }
+
+        .coupon-suggestion small {
+            color: #9fb0bf;
+        }
+
+        .coupon-suggestion:hover {
+            transform: translateY(-1px);
+            border-color: rgba(255, 127, 102, 0.45);
+        }
+
+        .coupon-suggestion.active {
+            border-color: rgba(255, 127, 102, 0.62);
+            background: rgba(255, 127, 102, 0.16);
+        }
+
+        @keyframes noticeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .progress-thin {
+            height: 0.55rem;
+            border-radius: 999px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .progress-thin > span {
+            display: block;
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, #ff9c88, #ff6344);
+            transition: width 0.35s ease;
+        }
+
+        .cart-toast {
+            position: fixed;
+            right: 16px;
+            bottom: 16px;
+            z-index: 1200;
+            background: #163024;
+            color: #d7ffe9;
+            border: 1px solid #2c6c4d;
+            border-radius: 0.7rem;
+            padding: 0.6rem 0.85rem;
+            display: none;
+        }
+
+        .cart-toast.show {
+            display: block;
+        }
+
+        .summary-sticky {
+            position: sticky;
+            top: 92px;
+        }
+
+        .checkout-guard {
+            border: 1px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 0.8rem;
+            padding: 0.55rem 0.7rem;
+            margin-top: 0.7rem;
+            font-size: 0.82rem;
+            color: #a9b7c4;
+        }
+
+        @media (max-width: 991.98px) {
+            .recommend-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cart-insight-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .assurance-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .summary-sticky {
+                position: static;
+            }
+        }
+
+        @media (max-width: 575.98px) {
+            .cart-item {
+                grid-template-columns: 64px 1fr;
+            }
+
+            .cart-item .item-actions {
+                grid-column: 1 / -1;
+                justify-content: space-between;
+            }
+
+            .cart-thumb {
+                width: 64px;
+                height: 64px;
+            }
+        }
+
+        @media (max-width: 430px) {
+            .cart-surface {
+                padding: 0.85rem;
+            }
+
+            .cart-hero-section h1 {
+                font-size: 2rem;
+            }
+
+            .summary-line,
+            .coupon-chip-wrap {
+                gap: 0.45rem;
+            }
+        }
+
+        @media (max-width: 390px) {
+            .assurance-grid,
+            .recommend-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .qty-control {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm sticky-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="./home.html">
+                <img src="../assets/Main/logo.webp" alt="FoodieHub Logo" width="40" height="40" class="d-inline-block align-text-top me-2">
+                FoodieHub
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="./home.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="./menu.html">Menu</a></li>
+                    <li class="nav-item"><a class="nav-link" href="./about.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="./contact.html">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link" href="./orders.html">Orders</a></li>
+                    <li class="nav-item"><a class="btn btn-outline-warning ms-2 active" aria-current="page" href="./cart.html">Cart <span id="navCartCount" class="badge bg-dark ms-1">0</span></a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section class="py-5 hero-section cart-hero-section">
+        <div class="container">
+            <div class="row align-items-center g-4">
+                <div class="col-lg-7">
+                    <h1 class="display-5 fw-bold mb-3">Your Cart Is Ready</h1>
+                    <p class="lead mb-4">Adjust items, apply coupons quickly, and track how close you are to free delivery before checkout.</p>
+                    <a href="./menu.html" class="btn btn-outline-secondary btn-lg me-2">Add More Items</a>
+                    <a href="./checkout.html" class="btn btn-primary btn-lg">Checkout</a>
+                </div>
+                <div class="col-lg-5">
+                    <div class="cart-surface">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <strong>Estimated Delivery</strong>
+                            <span id="etaText" class="text-warning">-- min</span>
+                        </div>
+                        <div class="progress-thin mb-2"><span id="freeDeliveryBar"></span></div>
+                        <small id="freeDeliveryHint" class="text-muted">Spend &#8377;45 to unlock free delivery.</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-5" id="cart-main">
+        <div class="container">
+            <div class="cart-surface mb-4">
+                <div class="assurance-grid">
+                    <div class="assurance-chip"><i class="bi bi-patch-check-fill"></i> Quality Checked</div>
+                    <div class="assurance-chip"><i class="bi bi-clock-history"></i> Real-Time ETA</div>
+                    <div class="assurance-chip"><i class="bi bi-truck"></i> Safe Delivery</div>
+                    <div class="assurance-chip"><i class="bi bi-shield-lock"></i> Secure Checkout</div>
+                </div>
+            </div>
+            <div class="row g-4 align-items-start">
+                <div class="col-lg-8">
+                    <div class="cart-surface mb-3">
+                        <div class="cart-insight-grid">
+                            <div class="cart-insight">
+                                <small class="text-muted">Items</small>
+                                <span class="value" id="insightItems">0</span>
+                            </div>
+                            <div class="cart-insight">
+                                <small class="text-muted">Savings</small>
+                                <span class="value text-success" id="insightSavings">&#8377;0.00</span>
+                            </div>
+                            <div class="cart-insight">
+                                <small class="text-muted">Current Total</small>
+                                <span class="value text-warning" id="insightTotal">&#8377;0.00</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="cart-surface mb-3">
+                        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                            <h3 class="mb-0">Cart Items</h3>
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-sm btn-outline-secondary" id="clearCartBtn">Clear Cart</button>
+                                <button class="btn btn-sm btn-outline-primary" id="saveCartBtn">Save Cart</button>
+                                <a class="btn btn-sm btn-outline-primary" href="./menu.html">Continue Shopping</a>
+                            </div>
+                        </div>
+                        <small id="saveCartState" class="text-muted">Cart sync is local to this browser.</small>
+                    </div>
+
+                    <div class="cart-surface" id="cartItemsWrap"></div>
+                    <div id="cartActionNotice" class="cart-action-notice d-none"></div>
+
+                    <div class="cart-surface mt-3">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h5 class="mb-0">Saved For Later</h5>
+                            <small class="text-muted">Move items back when ready</small>
+                        </div>
+                        <div id="savedForLaterWrap"></div>
+                    </div>
+
+                    <div class="cart-surface mt-3" id="recommendWrap">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="mb-0">Add Popular Sides</h5>
+                            <small class="text-muted">Fast add in one click</small>
+                        </div>
+                        <div class="recommend-grid" id="recommendGrid"></div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="cart-surface summary-sticky">
+                        <h4 class="mb-3">Order Summary</h4>
+
+                        <div class="coupon-chip-wrap">
+                            <button class="coupon-chip" data-coupon-chip="SAVE10">SAVE10</button>
+                            <button class="coupon-chip" data-coupon-chip="WELCOME5">WELCOME5</button>
+                            <button class="coupon-chip" data-coupon-chip="FREEDLV">FREEDLV</button>
+                        </div>
+
+                        <label for="couponInput" class="form-label">Coupon Code</label>
+                        <div class="input-group mb-2">
+                            <input id="couponInput" type="text" class="form-control" placeholder="SAVE10 / WELCOME5 / FREEDLV">
+                            <button id="applyCouponBtn" class="btn btn-outline-primary" type="button">Apply</button>
+                        </div>
+                        <small id="couponMsg" class="text-muted d-block mb-3">Try SAVE10 for up to &#8377;8 off.</small>
+                        <div id="couponSuggestions" class="coupon-suggestion-grid"></div>
+
+                        <label for="deliverySelect" class="form-label">Delivery Speed</label>
+                        <select id="deliverySelect" class="form-select mb-2">
+                            <option value="standard">Standard - 30 to 40 min</option>
+                            <option value="priority">Priority - 20 to 28 min (+&#8377;3)</option>
+                        </select>
+
+                        <label for="tipSelect" class="form-label">Rider Tip</label>
+                        <select id="tipSelect" class="form-select mb-2">
+                            <option value="0">No Tip</option>
+                            <option value="2">&#8377;2</option>
+                            <option value="5">&#8377;5</option>
+                            <option value="10p">10%</option>
+                            <option value="15p">15%</option>
+                        </select>
+
+                        <label for="cartNote" class="form-label">Delivery Note</label>
+                        <textarea id="cartNote" rows="2" class="form-control mb-3" placeholder="Example: Please call when outside"></textarea>
+
+                        <div class="summary-line"><span>Items (<span id="itemCount">0</span>)</span><strong id="subtotalText">&#8377;0.00</strong></div>
+                        <div class="summary-line"><span>Discount</span><strong id="discountText">-&#8377;0.00</strong></div>
+                        <div class="summary-line"><span>Tax (8%)</span><strong id="taxText">&#8377;0.00</strong></div>
+                        <div class="summary-line"><span>Delivery</span><strong id="deliveryText">&#8377;0.00</strong></div>
+                        <div class="summary-line"><span>Tip</span><strong id="tipText">&#8377;0.00</strong></div>
+                        <div class="summary-line summary-total"><span>Total</span><strong id="totalText">&#8377;0.00</strong></div>
+
+                        <a id="checkoutBtn" href="./checkout.html" class="btn btn-primary w-100 mt-3">Proceed To Checkout</a>
+                        <div class="checkout-guard"><i class="bi bi-lock-fill me-1"></i> Payments and personal data are encrypted.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-dark text-light pt-5 pb-3">
+        <div class="container">
+            <div class="text-center"><small>&copy; 2026 FoodieHub. All rights reserved.</small></div>
+        </div>
+    </footer>
+
+    <div class="cart-toast" id="cartToast">Item added to cart.</div>
+
+    <script src="../bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="../js/ui-enhancements.js"></script>
+    <script src="../js/auth.js?v=20260217c"></script>
+    <script src="../js/app.js?v=20260218b"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+

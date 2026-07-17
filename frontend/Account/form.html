@@ -1,0 +1,1317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#ff6f4d">
+    <link rel="manifest" href="../manifest.webmanifest">
+    <title>FoodieHub - Login Portal</title>
+    <link href="../bootstrap/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/advanced-ui.css">
+    <link rel="icon" href="../assets/Main/logo.webp" type="image/webp">
+    <style>
+        body.auth-page {
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at 12% 22%, rgba(255, 99, 68, 0.2), transparent 36%),
+                radial-gradient(circle at 85% 12%, rgba(52, 152, 219, 0.18), transparent 32%),
+                linear-gradient(150deg, #070b10 0%, #101720 50%, #0a0f15 100%);
+        }
+
+        .auth-wrap {
+            min-height: calc(100vh - 76px);
+            display: flex;
+            align-items: center;
+        }
+
+        .auth-shell {
+            position: relative;
+            border-radius: 1.2rem;
+            isolation: isolate;
+        }
+
+        .auth-shell::before {
+            content: "";
+            position: absolute;
+            inset: -10px;
+            border-radius: 1.4rem;
+            background:
+                radial-gradient(circle at 12% 20%, rgba(255, 123, 94, 0.22), transparent 42%),
+                radial-gradient(circle at 86% 16%, rgba(67, 158, 223, 0.2), transparent 42%),
+                linear-gradient(130deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.01));
+            filter: blur(10px);
+            z-index: -1;
+            animation: shellGlow 7s ease-in-out infinite alternate;
+        }
+
+        .auth-shell > .row {
+            --bs-gutter-x: 1rem;
+            --bs-gutter-y: 1rem;
+        }
+
+        .auth-left {
+            position: relative;
+            padding: 2rem 1.5rem;
+            background:
+                radial-gradient(circle at 18% 18%, rgba(255, 127, 102, 0.25), transparent 34%),
+                linear-gradient(145deg, #111a25 0%, #0b1118 60%, #0a0f14 100%);
+            color: #eaf2fb;
+            height: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 1.08rem;
+            box-shadow: 0 24px 36px -24px rgba(0, 0, 0, 0.85);
+            overflow: hidden;
+            animation: panelReveal 0.65s ease both;
+        }
+
+        .auth-left::after {
+            content: "";
+            position: absolute;
+            width: 160px;
+            height: 160px;
+            right: -60px;
+            bottom: -70px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 127, 102, 0.22), transparent 70%);
+            pointer-events: none;
+            animation: orbFloat 5s ease-in-out infinite;
+        }
+
+        .auth-left h2 {
+            font-family: var(--font-primary);
+            font-size: clamp(1.85rem, 4vw, 2.4rem);
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -0.015em;
+            color: #f4f9ff;
+            background: none;
+            -webkit-text-fill-color: #f4f9ff;
+            margin-bottom: 0.55rem;
+        }
+
+        .auth-subtitle {
+            color: #b1c3d6;
+            max-width: 28rem;
+            margin-bottom: 0;
+        }
+
+        .auth-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.38rem;
+            border: 1px solid rgba(255, 189, 153, 0.5);
+            border-radius: 999px;
+            padding: 0.26rem 0.62rem;
+            font-size: 0.75rem;
+            color: #ffd5be;
+        }
+
+        .auth-feature-list {
+            display: grid;
+            gap: 0.62rem;
+            margin-top: 1.05rem;
+        }
+
+        .auth-feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.62rem;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 0.72rem;
+            padding: 0.62rem 0.72rem;
+            background: rgba(255, 255, 255, 0.03);
+            transition: transform 0.22s ease, border-color 0.22s ease, background 0.22s ease;
+        }
+
+        .auth-feature-item:hover {
+            transform: translateY(-2px);
+            border-color: rgba(255, 133, 96, 0.42);
+            background: rgba(255, 133, 96, 0.08);
+        }
+
+        .auth-feature-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.14);
+            color: #ffd7c8;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex: 0 0 auto;
+            font-size: 0.88rem;
+        }
+
+        .auth-feature-item strong {
+            display: block;
+            font-size: 0.93rem;
+            color: #f4f8fd;
+            line-height: 1.2;
+            margin-bottom: 0.1rem;
+        }
+
+        .auth-feature-item small {
+            color: #9eb2c6;
+            font-size: 0.82rem;
+        }
+
+        .auth-tip {
+            margin-top: 1rem;
+            border: 1px dashed rgba(255, 255, 255, 0.22);
+            border-radius: 0.75rem;
+            padding: 0.55rem 0.72rem;
+            font-size: 0.82rem;
+            color: #9fb5ca;
+        }
+
+        .auth-right {
+            position: relative;
+            padding: 1.5rem 1.2rem;
+            background: linear-gradient(150deg, rgba(9, 14, 20, 0.92), rgba(7, 11, 16, 0.94));
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 1.08rem;
+            box-shadow: 0 24px 36px -24px rgba(0, 0, 0, 0.85);
+            overflow: hidden;
+            animation: panelReveal 0.72s ease both;
+            animation-delay: 0.08s;
+        }
+
+        .auth-tabs {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .auth-tab {
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.04);
+            color: #d9e6f3;
+            font-weight: 600;
+            padding: 0.55rem 0.85rem;
+            transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+        }
+
+        .auth-tab:hover {
+            transform: translateY(-1px);
+            border-color: rgba(255, 255, 255, 0.32);
+        }
+
+        .auth-tab.active {
+            border-color: rgba(255, 133, 96, 0.7);
+            background: linear-gradient(135deg, #ff8560 0%, #ff6144 100%);
+            color: #fff;
+        }
+
+        .auth-form {
+            display: none;
+        }
+
+        .auth-form.active {
+            display: block;
+            animation: formFadeIn 0.26s ease;
+        }
+
+        .auth-input {
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            color: #f4f8fc;
+            min-height: 46px;
+        }
+
+        .auth-input::placeholder {
+            color: #97a8ba;
+        }
+
+        .auth-input:focus {
+            background: rgba(255, 255, 255, 0.09);
+            color: #ffffff;
+            border-color: rgba(255, 133, 96, 0.75);
+            box-shadow: 0 0 0 0.2rem rgba(255, 133, 96, 0.2);
+        }
+
+        .auth-btn {
+            min-height: 46px;
+            font-weight: 700;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .auth-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 16px 20px -16px rgba(0, 0, 0, 0.75);
+        }
+
+        .auth-note {
+            font-size: 0.82rem;
+            color: #9db0c4;
+        }
+
+        .auth-divider {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            color: #8fa3b8;
+            font-size: 0.82rem;
+            margin: 0.9rem 0 0.8rem;
+        }
+
+        .auth-divider::before,
+        .auth-divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.16);
+        }
+
+        .auth-social-btn {
+            min-height: 44px;
+            font-weight: 600;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .auth-social-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 14px 18px -16px rgba(0, 0, 0, 0.8);
+        }
+
+        .signup-step-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 999px;
+            padding: 0.2rem 0.6rem;
+            font-size: 0.76rem;
+            color: #bfd0e2;
+            margin-bottom: 0.9rem;
+        }
+
+        .otp-box {
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 0.9rem;
+            padding: 0.95rem;
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .google-account-list {
+            display: grid;
+            gap: 0.55rem;
+        }
+
+        .google-account-btn {
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 0.75rem;
+            background: rgba(255, 255, 255, 0.03);
+            color: #eaf2fb;
+            text-align: left;
+            padding: 0.65rem 0.75rem;
+        }
+
+        .google-account-btn:hover {
+            border-color: rgba(255, 133, 96, 0.62);
+            background: rgba(255, 133, 96, 0.12);
+        }
+
+        .google-avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff8560 0%, #ff6144 100%);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #fff;
+            margin-right: 0.65rem;
+            flex: 0 0 auto;
+        }
+
+        .google-confirm-card {
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 0.85rem;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 0.8rem;
+        }
+
+        .auth-session {
+            border: 1px solid rgba(72, 183, 111, 0.45);
+            background: rgba(72, 183, 111, 0.12);
+            color: #d5f7e2;
+            border-radius: 0.8rem;
+            padding: 0.7rem;
+            margin-bottom: 1rem;
+        }
+
+        @keyframes panelReveal {
+            from {
+                opacity: 0;
+                transform: translateY(14px) scale(0.99);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes formFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes shellGlow {
+            from {
+                opacity: 0.55;
+                transform: scale(0.985);
+            }
+            to {
+                opacity: 0.88;
+                transform: scale(1.01);
+            }
+        }
+
+        @keyframes orbFloat {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @media (max-width: 991.98px) {
+            .auth-wrap {
+                align-items: flex-start;
+            }
+
+            .auth-shell > .row {
+                --bs-gutter-x: 0.75rem;
+                --bs-gutter-y: 0.75rem;
+            }
+
+            .auth-left,
+            .auth-right {
+                animation: none;
+            }
+        }
+
+        @media (max-width: 430px) {
+            .auth-left,
+            .auth-right {
+                padding: 1.15rem 0.95rem;
+            }
+
+            .auth-tabs {
+                grid-template-columns: 1fr;
+            }
+
+            .auth-tab {
+                border-radius: 0.9rem;
+            }
+        }
+
+        @media (max-width: 390px) {
+            .auth-feature-item {
+                padding: 0.58rem 0.62rem;
+            }
+
+            .auth-left h2 {
+                font-size: 1.65rem;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .auth-shell::before,
+            .auth-left::after,
+            .auth-left,
+            .auth-right,
+            .auth-form.active {
+                animation: none !important;
+            }
+
+            .auth-tab,
+            .auth-btn,
+            .auth-social-btn,
+            .auth-feature-item {
+                transition: none !important;
+            }
+        }
+    </style>
+</head>
+
+<body class="auth-page">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm sticky-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="../index.html">
+                <img src="../assets/Main/logo.webp" alt="FoodieHub Logo" width="40" height="40"
+                    class="d-inline-block align-text-top me-2">
+                FoodieHub
+            </a>
+            <div class="d-flex align-items-center gap-2">
+                <a class="btn btn-outline-light btn-sm" href="../pages/home.html">User Home</a>
+                <a class="btn btn-outline-warning btn-sm" href="./form.html?mode=admin">Admin Login</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="auth-wrap py-5">
+        <div class="container">
+            <div class="auth-shell">
+                <div class="row g-3 align-items-stretch">
+                    <div class="col-lg-5">
+                        <section class="auth-left">
+                            <span class="auth-badge"><i class="bi bi-shield-lock"></i> Secure Access Portal</span>
+                            <h2 class="mt-3">Welcome to FoodieHub</h2>
+                            <p class="auth-subtitle">One clean portal for user login, OTP signup, and admin access.</p>
+                            <div class="auth-feature-list">
+                                <div class="auth-feature-item">
+                                    <span class="auth-feature-icon"><i class="bi bi-person-check"></i></span>
+                                    <div>
+                                        <strong>User Access</strong>
+                                        <small>Login to manage cart, checkout, and order history.</small>
+                                    </div>
+                                </div>
+                                <div class="auth-feature-item">
+                                    <span class="auth-feature-icon"><i class="bi bi-phone"></i></span>
+                                    <div>
+                                        <strong>Email OTP Signup</strong>
+                                        <small>Create account with name, age, email, phone, then verify the OTP sent to
+                                            your email.</small>
+                                    </div>
+                                </div>
+                                <div class="auth-feature-item">
+                                    <span class="auth-feature-icon"><i class="bi bi-shield-lock"></i></span>
+                                    <div>
+                                        <strong>Admin Console</strong>
+                                        <small>Separate admin login for monitoring orders and stats.</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </section>
+                    </div>
+                    <div class="col-lg-7">
+                        <section class="auth-right">
+                            <div id="sessionBox" class="auth-session d-none"></div>
+                            <div id="alertBox" class="alert d-none" role="alert"></div>
+
+                            <div class="auth-tabs">
+                                <button type="button" class="auth-tab active" id="userTabBtn" data-tab="user">User
+                                    Login</button>
+                                <button type="button" class="auth-tab" id="signupTabBtn" data-tab="signup">Create
+                                    Account</button>
+                                <button type="button" class="auth-tab" id="adminTabBtn" data-tab="admin">Admin
+                                    Login</button>
+                            </div>
+
+                            <form id="userLoginForm" class="auth-form active" novalidate>
+                                <h5 class="mb-3 text-white">Sign in as User</h5>
+                                <div class="mb-3">
+                                    <label class="form-label text-light" for="userEmail">Username or email</label>
+                                    <input class="form-control auth-input" id="userEmail" type="text"
+                                        placeholder="pizzalover@foodiehub.com or pizzalover" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label text-light" for="userPassword">Password</label>
+                                    <input class="form-control auth-input" id="userPassword" type="password"
+                                        placeholder="Enter your password" required minlength="6">
+                                </div>
+                                <button class="btn btn-primary w-100 auth-btn" type="submit"><i
+                                        class="bi bi-person-check me-1"></i> Login as User</button>
+                                <p class="auth-note mt-2 mb-0">Demo users: <strong>pizzalover@foodiehub.com</strong> /
+                                    <strong>farmhouse</strong> and <strong>burgerbite@foodiehub.com</strong> /
+                                    <strong>smokychicken</strong>
+                                </p>
+                                <div class="auth-divider">or continue with</div>
+                                <div class="d-grid gap-2">
+                                    <button id="googleContinueBtn" type="button"
+                                        class="btn btn-outline-danger auth-social-btn">
+                                        <i class="bi bi-google me-1"></i> Continue with Google
+                                    </button>
+                                    <button id="guestContinueBtn" type="button"
+                                        class="btn btn-outline-info auth-social-btn">
+                                        <i class="bi bi-person-bounding-box me-1"></i> Continue as Guest
+                                    </button>
+                                </div>
+                                <div class="mt-2">
+                                    <button id="switchSignupBtn" type="button"
+                                        class="btn btn-link p-0 text-decoration-none">New user? Sign up with
+                                        OTP</button>
+                                </div>
+                            </form>
+
+                            <form id="adminLoginForm" class="auth-form" novalidate>
+                                <h5 class="mb-3 text-white">Sign in as Admin</h5>
+                                <div class="mb-3">
+                                    <label class="form-label text-light" for="adminEmail">Admin username</label>
+                                    <input class="form-control auth-input" id="adminEmail" type="text"
+                                        placeholder="Enter admin username" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label text-light" for="adminPassword">Password</label>
+                                    <input class="form-control auth-input" id="adminPassword" type="password"
+                                        placeholder="Enter admin password" required minlength="6">
+                                </div>
+                                <button class="btn btn-warning w-100 auth-btn" type="submit"><i
+                                        class="bi bi-shield-lock-fill me-1"></i> Login as Admin</button>
+                            </form>
+
+                            <form id="signupForm" class="auth-form" novalidate>
+                                <h5 class="mb-3 text-white">Sign Up with Email OTP</h5>
+
+                                <div id="signupStepOne">
+                                    <span class="signup-step-badge"><i class="bi bi-1-circle"></i> Step 1: Profile
+                                        Details</span>
+                                    <div class="mb-3">
+                                        <label class="form-label text-light" for="signupName">Full name</label>
+                                        <input class="form-control auth-input" id="signupName" type="text"
+                                            placeholder="Your full name" required minlength="2">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label text-light" for="signupAge">Age</label>
+                                        <input class="form-control auth-input" id="signupAge" type="number" min="13"
+                                            max="100" placeholder="18" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label text-light" for="signupEmail">Email</label>
+                                        <input class="form-control auth-input" id="signupEmail" type="email"
+                                            placeholder="you@example.com" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label text-light" for="signupPhone">Phone number</label>
+                                        <input class="form-control auth-input" id="signupPhone" type="tel"
+                                            placeholder="9876543210" required>
+                                        <small class="auth-note d-block mt-2">Phone is saved with your account. Signup
+                                            OTP is currently sent to your email address.</small>
+                                    </div>
+                                    <button id="signupContinueBtn" class="btn btn-success w-100 auth-btn"
+                                        type="button"><i class="bi bi-arrow-right-circle me-1"></i> Continue</button>
+                                </div>
+
+                                <div id="signupStepTwo" class="d-none">
+                                    <span class="signup-step-badge"><i class="bi bi-2-circle"></i> Step 2: OTP
+                                        Verification</span>
+                                    <div class="otp-box mb-3">
+                                        <p class="mb-2">OTP sent to <strong id="otpPhoneText">your email</strong>.</p>
+                                        <label class="form-label text-light" for="signupOtp">Enter OTP</label>
+                                        <input class="form-control auth-input mb-2" id="signupOtp" type="text"
+                                            inputmode="numeric" maxlength="6" placeholder="6-digit OTP">
+                                        <small class="auth-note d-block" id="otpDemoHint">Enter the 6-digit OTP sent to
+                                            your email address.</small>
+                                    </div>
+                                    <button id="verifyOtpBtn" class="btn btn-success w-100 auth-btn mb-2"
+                                        type="button"><i class="bi bi-check-circle me-1"></i> Verify OTP &
+                                        Login</button>
+                                    <div class="d-flex gap-2">
+                                        <button id="resendOtpBtn" class="btn btn-outline-warning flex-grow-1"
+                                            type="button">Resend OTP</button>
+                                        <button id="editSignupBtn" class="btn btn-outline-light flex-grow-1"
+                                            type="button">Edit Details</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="modal fade" id="googleChooserModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark text-light border border-secondary">
+                <div class="modal-header border-secondary">
+                    <h5 class="modal-title">Continue with Google</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="googleChooserWrap">
+                        <p class="text-secondary mb-2">Choose an account</p>
+                        <div id="googleAccountList" class="google-account-list mb-3"></div>
+                        <div class="google-confirm-card">
+                            <h6 class="mb-2">Use another account</h6>
+                            <div class="mb-2">
+                                <input id="googleNewName" class="form-control auth-input" type="text" placeholder="Full name">
+                            </div>
+                            <div class="mb-2">
+                                <input id="googleNewEmail" class="form-control auth-input" type="email" placeholder="name@gmail.com">
+                            </div>
+                            <button id="googleAddAccountBtn" type="button" class="btn btn-outline-light btn-sm">Add to chooser</button>
+                        </div>
+                    </div>
+
+                    <div id="googleConfirmWrap" class="d-none">
+                        <p class="text-secondary mb-2">Confirm this account</p>
+                        <div class="google-confirm-card">
+                            <div class="d-flex align-items-center mb-2">
+                                <span id="googleConfirmAvatar" class="google-avatar">G</span>
+                                <div>
+                                    <div id="googleConfirmName" class="fw-semibold"></div>
+                                    <small id="googleConfirmEmail" class="text-secondary"></small>
+                                </div>
+                            </div>
+                            <p class="mb-0 text-secondary small">Continue to FoodieHub with this Google account?</p>
+                        </div>
+                    </div>
+                    <div id="googleChooserError" class="alert alert-danger d-none mt-3 mb-0"></div>
+                </div>
+                <div class="modal-footer border-secondary">
+                    <button id="googleCancelBtn" type="button" class="btn btn-outline-light" data-bs-dismiss="modal">Cancel</button>
+                    <button id="googleBackBtn" type="button" class="btn btn-outline-secondary d-none">Back</button>
+                    <button id="googleConfirmBtn" type="button" class="btn btn-danger d-none">Continue</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="../js/ui-enhancements.js"></script>
+    <script src="../js/auth.js?v=20260217c"></script>
+    <script>
+        (function () {
+            "use strict";
+
+            const userTabBtn = document.getElementById("userTabBtn");
+            const signupTabBtn = document.getElementById("signupTabBtn");
+            const adminTabBtn = document.getElementById("adminTabBtn");
+            const userLoginForm = document.getElementById("userLoginForm");
+            const signupForm = document.getElementById("signupForm");
+            const adminLoginForm = document.getElementById("adminLoginForm");
+            const googleContinueBtn = document.getElementById("googleContinueBtn");
+            const guestContinueBtn = document.getElementById("guestContinueBtn");
+            const switchSignupBtn = document.getElementById("switchSignupBtn");
+            const signupStepOne = document.getElementById("signupStepOne");
+            const signupStepTwo = document.getElementById("signupStepTwo");
+            const signupContinueBtn = document.getElementById("signupContinueBtn");
+            const verifyOtpBtn = document.getElementById("verifyOtpBtn");
+            const resendOtpBtn = document.getElementById("resendOtpBtn");
+            const editSignupBtn = document.getElementById("editSignupBtn");
+            const otpPhoneText = document.getElementById("otpPhoneText");
+            const otpDemoHint = document.getElementById("otpDemoHint");
+            const googleChooserModalEl = document.getElementById("googleChooserModal");
+            const googleChooserWrap = document.getElementById("googleChooserWrap");
+            const googleConfirmWrap = document.getElementById("googleConfirmWrap");
+            const googleAccountList = document.getElementById("googleAccountList");
+            const googleChooserError = document.getElementById("googleChooserError");
+            const googleNewName = document.getElementById("googleNewName");
+            const googleNewEmail = document.getElementById("googleNewEmail");
+            const googleAddAccountBtn = document.getElementById("googleAddAccountBtn");
+            const googleCancelBtn = document.getElementById("googleCancelBtn");
+            const googleBackBtn = document.getElementById("googleBackBtn");
+            const googleConfirmBtn = document.getElementById("googleConfirmBtn");
+            const googleConfirmAvatar = document.getElementById("googleConfirmAvatar");
+            const googleConfirmName = document.getElementById("googleConfirmName");
+            const googleConfirmEmail = document.getElementById("googleConfirmEmail");
+            const alertBox = document.getElementById("alertBox");
+            const sessionBox = document.getElementById("sessionBox");
+            const googleModal = googleChooserModalEl ? new bootstrap.Modal(googleChooserModalEl) : null;
+
+            let selectedGoogleAccount = null;
+            let googleOtpEmail = "";
+            let googleDemoOtp = "";
+
+            function maskPhone(value) {
+                const raw = String(value || "").replace(/\D+/g, "");
+                if (!raw) return "+**********";
+                const last4 = raw.slice(-4);
+                return "+" + "*".repeat(Math.max(0, raw.length - 4)) + last4;
+            }
+
+            function showAlert(message, type) {
+                const raw = String(message || "");
+                const normalized = raw.toLowerCase();
+                const safeMessage = normalized.includes("use the demo credentials shown below the form")
+                    ? "Invalid username/email or password."
+                    : raw;
+                alertBox.className = "alert";
+                if (type === "success") alertBox.classList.add("alert-success");
+                else if (type === "info") alertBox.classList.add("alert-info");
+                else alertBox.classList.add("alert-danger");
+                alertBox.textContent = safeMessage;
+            }
+
+            function clearAlert() {
+                alertBox.className = "alert d-none";
+                alertBox.textContent = "";
+            }
+
+            function oauthStartUrl() {
+                const path = String(window.location.pathname || "/");
+                const lower = path.toLowerCase();
+                const marker = "/frontend/";
+                const markerIndex = lower.indexOf(marker);
+                const prefix = markerIndex >= 0 ? path.slice(0, markerIndex) : "";
+                return prefix + "/backend/public/index.php/api/users/google/start";
+            }
+
+            function backendApiBase() {
+                const path = String(window.location.pathname || "/");
+                const lower = path.toLowerCase();
+                const marker = "/frontend/";
+                const markerIndex = lower.indexOf(marker);
+                const prefix = markerIndex >= 0 ? path.slice(0, markerIndex) : "";
+                return prefix + "/backend/public/index.php/api";
+            }
+
+            function readCsrfToken() {
+                return String(window.sessionStorage.getItem("foodiehub_csrf_token_v1") || "").trim();
+            }
+
+            function writeCsrfToken(token) {
+                const value = String(token || "").trim();
+                if (!value) return;
+                window.sessionStorage.setItem("foodiehub_csrf_token_v1", value);
+            }
+
+            function captureCsrfToken(response) {
+                if (!response || !response.headers) return;
+                writeCsrfToken(response.headers.get("X-CSRF-Token") || "");
+            }
+
+            async function ensureCsrfToken(forceRefresh) {
+                if (!forceRefresh) {
+                    const existing = readCsrfToken();
+                    if (existing) return existing;
+                }
+                const response = await fetch(backendApiBase() + "/health", {
+                    method: "GET",
+                    credentials: "include"
+                });
+                captureCsrfToken(response);
+                return readCsrfToken();
+            }
+
+            function storeSessionV3(account, provider) {
+                const role = account && account.role === "admin" ? "admin" : account && account.role === "guest" ? "guest" : "user";
+                // app.js treats the session as valid only if `session.email` is present.
+                // Some backend responses may omit email when logging in with username.
+                const normalizedEmail = String(account && account.email || "").trim().toLowerCase();
+                const session = {
+                    id: String(account && account.id || ""),
+                    username: String(account && account.username || ""),
+                    name: String(account && account.name || "User"),
+                    email: normalizedEmail || "",
+                    role: role,
+                    phone: String(account && account.phone || "").replace(/\D+/g, ""),
+                    provider: String(provider || "password"),
+                    loginAt: new Date().toISOString()
+                };
+                window.sessionStorage.setItem("foodiehub_auth_session_v3", JSON.stringify(session));
+                // Mirror to localStorage so login survives refresh/new tab, same as app.js expects.
+                try { window.localStorage.setItem("foodiehub_auth_session_v3", JSON.stringify(session)); } catch (_e) { }
+                return session;
+            }
+
+            async function directBackendLogin(identifier, password, expectedRole) {
+                const target = backendApiBase() + "/users/login";
+                const csrfToken = await ensureCsrfToken(false);
+                const response = await fetch(target, {
+                    method: "POST",
+                    headers: Object.assign({ "Content-Type": "application/json" }, csrfToken ? { "X-CSRF-Token": csrfToken } : {}),
+                    credentials: "include",
+                    body: JSON.stringify({
+                        email: String(identifier || "").trim(),
+                        password: String(password || "")
+                    })
+                });
+                captureCsrfToken(response);
+
+                let payload = null;
+                try {
+                    payload = await response.json();
+                } catch (_error) {
+                    payload = null;
+                }
+
+                if (response.status === 419) {
+                    const refreshed = await ensureCsrfToken(true);
+                    return directBackendLoginWithToken(identifier, password, expectedRole, refreshed);
+                }
+
+                if (!response.ok || !payload || !payload.success || !payload.data) {
+                    return {
+                        ok: false,
+                        message: (payload && payload.message) ? payload.message : "Login failed."
+                    };
+                }
+
+                const account = payload.data;
+                // Ensure session has an email, otherwise app.js will consider the user logged out.
+                if (account && !account.email) {
+                    const typed = String(identifier || "").trim().toLowerCase();
+                    account.email = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(typed) ? typed : (typed ? (typed + "@foodiehub.local") : "");
+                }
+                const role = account.role === "admin" ? "admin" : account.role === "guest" ? "guest" : "user";
+                const neededRole = expectedRole === "admin" ? "admin" : "user";
+                if (role !== neededRole) {
+                    return { ok: false, message: "Wrong login portal for this account role." };
+                }
+
+                const session = storeSessionV3(account, "password");
+                return { ok: true, message: payload.message || "Login successful.", session: session };
+            }
+
+            async function directBackendLoginWithToken(identifier, password, expectedRole, csrfToken) {
+                const response = await fetch(backendApiBase() + "/users/login", {
+                    method: "POST",
+                    headers: Object.assign({ "Content-Type": "application/json" }, csrfToken ? { "X-CSRF-Token": csrfToken } : {}),
+                    credentials: "include",
+                    body: JSON.stringify({
+                        email: String(identifier || "").trim(),
+                        password: String(password || "")
+                    })
+                });
+                captureCsrfToken(response);
+
+                let payload = null;
+                try {
+                    payload = await response.json();
+                } catch (_error) {
+                    payload = null;
+                }
+
+                if (!response.ok || !payload || !payload.success || !payload.data) {
+                    return {
+                        ok: false,
+                        message: (payload && payload.message) ? payload.message : "Login failed."
+                    };
+                }
+
+                const account = payload.data;
+                if (account && !account.email) {
+                    const typed = String(identifier || "").trim().toLowerCase();
+                    account.email = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(typed) ? typed : (typed ? (typed + "@foodiehub.local") : "");
+                }
+                const role = account.role === "admin" ? "admin" : account.role === "guest" ? "guest" : "user";
+                const neededRole = expectedRole === "admin" ? "admin" : "user";
+                if (role !== neededRole) {
+                    return { ok: false, message: "Wrong login portal for this account role." };
+                }
+
+                const session = storeSessionV3(account, "password");
+                return { ok: true, message: payload.message || "Login successful.", session: session };
+            }
+
+            function shouldRetryDirectBackend(result) {
+                if (!result || result.ok) return false;
+                const message = String(result.message || "").toLowerCase();
+                if (!message) return true;
+                if (message.includes("invalid username/email or password")) return false;
+                if (message.includes("invalid email or password")) return false;
+                if (message.includes("wrong login portal")) return false;
+                if (message.includes("user account is inactive")) return false;
+                if (message.includes("banned you")) return false;
+                return true;
+            }
+
+            function setGoogleError(message) {
+                if (!googleChooserError) return;
+                if (!message) {
+                    googleChooserError.classList.add("d-none");
+                    googleChooserError.textContent = "";
+                    return;
+                }
+                googleChooserError.textContent = message;
+                googleChooserError.classList.remove("d-none");
+            }
+
+            function initials(name, email) {
+                const n = String(name || "").trim();
+                if (n) {
+                    const parts = n.split(/\s+/).filter(Boolean);
+                    if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+                    return parts[0].slice(0, 2).toUpperCase();
+                }
+                return String(email || "G").slice(0, 2).toUpperCase();
+            }
+
+            function htmlSafe(value) {
+                return String(value || "")
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/\"/g, "&quot;")
+                    .replace(/'/g, "&#39;");
+            }
+
+            function renderGoogleAccountList() {
+                const accounts = window.FoodieAuth.readGoogleAccounts ? window.FoodieAuth.readGoogleAccounts() : [];
+                googleAccountList.innerHTML = "";
+                if (!accounts.length) {
+                    googleAccountList.innerHTML = "<div class='text-secondary small'>No Google account found. Add one below.</div>";
+                    return;
+                }
+                accounts.forEach(function (account) {
+                    const btn = document.createElement("button");
+                    btn.type = "button";
+                    btn.className = "google-account-btn";
+                    btn.innerHTML = ""
+                        + "<span class='d-flex align-items-center'>"
+                        + "<span class='google-avatar'>" + initials(account.name, account.email) + "</span>"
+                        + "<span>"
+                        + "<span class='d-block fw-semibold'>" + htmlSafe(account.name) + "</span>"
+                        + "<small class='text-secondary'>" + htmlSafe(account.email) + "</small>"
+                        + "</span></span>";
+                    btn.addEventListener("click", function () {
+                        selectedGoogleAccount = account;
+                        googleConfirmAvatar.textContent = initials(account.name, account.email);
+                        googleConfirmName.textContent = account.name;
+                        googleConfirmEmail.textContent = account.email;
+                        googleChooserWrap.classList.add("d-none");
+                        googleConfirmWrap.classList.remove("d-none");
+                        googleBackBtn.classList.remove("d-none");
+                        googleConfirmBtn.classList.remove("d-none");
+                        setGoogleError("");
+                    });
+                    googleAccountList.appendChild(btn);
+                });
+            }
+
+            function openGoogleChooser() {
+                if (!googleModal) return;
+                selectedGoogleAccount = null;
+                googleChooserWrap.classList.remove("d-none");
+                googleConfirmWrap.classList.add("d-none");
+                googleBackBtn.classList.add("d-none");
+                googleConfirmBtn.classList.add("d-none");
+                setGoogleError("");
+                renderGoogleAccountList();
+                googleModal.show();
+            }
+
+            function setSignupStep(step, meta) {
+                const stepNo = step === 2 ? 2 : 1;
+                signupStepOne.classList.toggle("d-none", stepNo !== 1);
+                signupStepTwo.classList.toggle("d-none", stepNo !== 2);
+                if (stepNo === 2) {
+                    if (meta && meta.email) {
+                        otpPhoneText.textContent = meta.email;
+                        otpDemoHint.textContent = googleDemoOtp
+                            ? ("Demo OTP: " + googleDemoOtp + " (local mode)")
+                            : "OTP sent to your Gmail. Enter the 6-digit code to login.";
+                    } else {
+                        const maskedEmail = (meta && meta.maskedEmail) ? meta.maskedEmail : String(document.getElementById("signupEmail").value || "");
+                        otpPhoneText.textContent = maskedEmail || "your email";
+                        otpDemoHint.textContent = "Enter the OTP sent to your email.";
+                    }
+                }
+            }
+
+            function setTab(mode) {
+                const user = mode === "user";
+                const signup = mode === "signup";
+                const admin = mode === "admin";
+                userTabBtn.classList.toggle("active", user);
+                signupTabBtn.classList.toggle("active", signup);
+                adminTabBtn.classList.toggle("active", admin);
+                userLoginForm.classList.toggle("active", user);
+                signupForm.classList.toggle("active", signup);
+                adminLoginForm.classList.toggle("active", admin);
+                alertBox.className = "alert d-none";
+                alertBox.textContent = "";
+            }
+
+            function redirectByRole(role) {
+                if (role === "admin") window.location.href = "./admin-panel.html";
+                else window.location.href = "../pages/home.html";
+            }
+
+            function restorePendingOtpIfAny() {
+                if (!window.FoodieAuth.getPendingSignup) return;
+                const pending = window.FoodieAuth.getPendingSignup();
+                if (!pending) {
+                    setSignupStep(1);
+                    return;
+                }
+                const signupName = document.getElementById("signupName");
+                const signupAge = document.getElementById("signupAge");
+                const signupEmail = document.getElementById("signupEmail");
+                const signupPhone = document.getElementById("signupPhone");
+                if (signupName) signupName.value = pending.name || "";
+                if (signupAge) signupAge.value = String(pending.age || "");
+                if (signupEmail) signupEmail.value = pending.email || "";
+                if (signupPhone) signupPhone.value = pending.phone || "";
+                setSignupStep(2, {
+                    maskedEmail: pending.email || ""
+                });
+            }
+
+            function applyBackendAuthMode() {
+                if (!window.FoodieAuth || typeof window.FoodieAuth.detectBackend !== "function") return;
+                window.FoodieAuth.detectBackend().then(function (enabled) {
+                    if (!enabled) return;
+                    if (otpDemoHint) otpDemoHint.textContent = "OTP is sent to your email address.";
+                }).catch(function () { });
+            }
+
+            userTabBtn.addEventListener("click", function () { setTab("user"); });
+            signupTabBtn.addEventListener("click", function () { setTab("signup"); restorePendingOtpIfAny(); });
+            adminTabBtn.addEventListener("click", function () { setTab("admin"); });
+            switchSignupBtn.addEventListener("click", function () { setTab("signup"); restorePendingOtpIfAny(); });
+
+            userLoginForm.addEventListener("submit", async function (event) {
+                event.preventDefault();
+                const email = document.getElementById("userEmail").value;
+                const password = document.getElementById("userPassword").value;
+                let result = await window.FoodieAuth.login(email, password, "user");
+                if (shouldRetryDirectBackend(result)) {
+                    try {
+                        const fallback = await directBackendLogin(email, password, "user");
+                        if (fallback.ok) {
+                            result = fallback;
+                        }
+                    } catch (_error) { }
+                }
+                if (!result.ok) {
+                    showAlert(result.message, "error");
+                    return;
+                }
+                showAlert("User login successful. Redirecting to home page...", "success");
+                setTimeout(function () { window.location.href = "../pages/home.html"; }, 700);
+            });
+
+            signupForm.addEventListener("submit", function (event) {
+                event.preventDefault();
+            });
+
+            adminLoginForm.addEventListener("submit", async function (event) {
+                event.preventDefault();
+                const email = document.getElementById("adminEmail").value;
+                const password = document.getElementById("adminPassword").value;
+                let result = await window.FoodieAuth.login(email, password, "admin");
+                if (shouldRetryDirectBackend(result)) {
+                    try {
+                        const fallback = await directBackendLogin(email, password, "admin");
+                        if (fallback.ok) {
+                            result = fallback;
+                        }
+                    } catch (_error) { }
+                }
+                if (!result.ok) {
+                    showAlert(result.message, "error");
+                    return;
+                }
+                showAlert("Admin login successful. Redirecting to admin panel...", "success");
+                setTimeout(function () { window.location.href = "./admin-panel.html"; }, 700);
+            });
+
+            googleContinueBtn.addEventListener("click", function () {
+                if (window.FoodieAuth && typeof window.FoodieAuth.startGoogleOAuth === "function") {
+                    window.FoodieAuth.startGoogleOAuth();
+                    return;
+                }
+                window.location.href = oauthStartUrl();
+            });
+
+            googleAddAccountBtn.addEventListener("click", function () {
+                const result = window.FoodieAuth.addGoogleAccount(googleNewName.value, googleNewEmail.value);
+                if (!result.ok) {
+                    setGoogleError(result.message);
+                    return;
+                }
+                googleNewName.value = "";
+                googleNewEmail.value = "";
+                setGoogleError("");
+                renderGoogleAccountList();
+            });
+
+            googleBackBtn.addEventListener("click", function () {
+                selectedGoogleAccount = null;
+                googleChooserWrap.classList.remove("d-none");
+                googleConfirmWrap.classList.add("d-none");
+                googleBackBtn.classList.add("d-none");
+                googleConfirmBtn.classList.add("d-none");
+                setGoogleError("");
+            });
+
+            googleConfirmBtn.addEventListener("click", function () {
+                if (!selectedGoogleAccount) {
+                    setGoogleError("Please select a Google account first.");
+                    return;
+                }
+                const result = window.FoodieAuth.continueWithGoogle(selectedGoogleAccount.email);
+                if (!result.ok) {
+                    setGoogleError(result.message);
+                    return;
+                }
+                googleModal.hide();
+                showAlert("Google login successful. Redirecting...", "success");
+                setTimeout(function () { redirectByRole(result.session && result.session.role); }, 700);
+            });
+
+            googleCancelBtn.addEventListener("click", function () {
+                selectedGoogleAccount = null;
+                setGoogleError("");
+            });
+
+            if (googleChooserModalEl) {
+                googleChooserModalEl.addEventListener("hidden.bs.modal", function () {
+                    selectedGoogleAccount = null;
+                    setGoogleError("");
+                });
+            }
+
+            guestContinueBtn.addEventListener("click", function () {
+                Promise.resolve(window.FoodieAuth.continueAsGuest()).then(function (result) {
+                    if (!result || !result.ok) {
+                        showAlert((result && result.message) || "Failed to start guest session.", "error");
+                        return;
+                    }
+                    showAlert("Guest session started. Redirecting...", "success");
+                    setTimeout(function () {
+                        window.location.href = "../pages/home.html";
+                    }, 700);
+                }).catch(function () {
+                    showAlert("Failed to start guest session.", "error");
+                });
+            });
+
+            signupContinueBtn.addEventListener("click", async function () {
+                const name = document.getElementById("signupName").value;
+                const age = document.getElementById("signupAge").value;
+                const email = document.getElementById("signupEmail").value;
+                const phone = document.getElementById("signupPhone").value;
+                const result = await window.FoodieAuth.sendSignupOtp(name, age, email, phone);
+                if (!result.ok) {
+                    showAlert(result.message, "error");
+                    return;
+                }
+                setSignupStep(2, { maskedEmail: result.maskedEmail, maskedPhone: result.maskedPhone });
+                if (otpDemoHint) {
+                    otpDemoHint.textContent = result.demoOtp
+                        ? ("Demo OTP: " + result.demoOtp + " (local mode)")
+                        : "Enter the OTP sent to your email.";
+                }
+                clearAlert();
+            });
+
+            verifyOtpBtn.addEventListener("click", async function () {
+                const otp = document.getElementById("signupOtp").value;
+                if (googleOtpEmail) {
+                    const result = await window.FoodieAuth.verifyGoogleOtp(googleOtpEmail, otp);
+                    if (!result.ok) {
+                        showAlert(result.message, "error");
+                        return;
+                    }
+                    showAlert("OTP verified. Login successful. Redirecting...", "success");
+                    setTimeout(function () { window.location.href = "../pages/home.html"; }, 700);
+                    return;
+                }
+                const result = await window.FoodieAuth.verifySignupOtp(otp);
+                if (!result.ok) {
+                    showAlert(result.message, "error");
+                    return;
+                }
+                showAlert("OTP verified. Login successful. Redirecting...", "success");
+                setTimeout(function () { window.location.href = "../pages/home.html"; }, 700);
+            });
+
+            resendOtpBtn.addEventListener("click", async function () {
+                if (googleOtpEmail) {
+                    showAlert("Click Continue with Google to request a new OTP.", "info");
+                    return;
+                }
+                const result = await window.FoodieAuth.resendSignupOtp();
+                if (!result.ok) {
+                    showAlert(result.message, "error");
+                    return;
+                }
+                setSignupStep(2, { maskedEmail: result.maskedEmail, maskedPhone: result.maskedPhone });
+                if (otpDemoHint) {
+                    otpDemoHint.textContent = result.demoOtp
+                        ? ("Demo OTP: " + result.demoOtp + " (local mode)")
+                        : "Enter the OTP sent to your email.";
+                }
+                clearAlert();
+            });
+
+            editSignupBtn.addEventListener("click", function () {
+                if (googleOtpEmail) {
+                    showAlert("Google OTP flow is active. Use Continue with Google for a new OTP.", "info");
+                    return;
+                }
+                setSignupStep(1);
+            });
+
+            const params = new URLSearchParams(window.location.search);
+            const mode = params.get("mode");
+            const denied = params.get("denied");
+            const oauthError = params.get("oauth_error");
+            const oauthEmail = params.get("email");
+            const session = window.FoodieAuth.getSession();
+            // If already logged in as admin, go to admin panel unless user explicitly wants to re-login.
+            if (mode === "admin" && session && session.role === "admin" && params.get("relogin") !== "1") {
+                window.location.href = "./admin-panel.html";
+                return;
+            }
+            if (mode === "admin") setTab("admin");
+            else if (mode === "google-otp") {
+                setTab("signup");
+                googleOtpEmail = String(oauthEmail || "").trim().toLowerCase();
+                googleDemoOtp = String(params.get("demo_otp") || "").trim();
+                const signupEmail = document.getElementById("signupEmail");
+                if (signupEmail && googleOtpEmail) {
+                    signupEmail.value = googleOtpEmail;
+                    signupEmail.readOnly = true;
+                }
+                setSignupStep(2, { email: googleOtpEmail || "your email" });
+                showAlert(
+                    googleDemoOtp
+                        ? "Google sign-in successful. Local demo OTP is shown below."
+                        : "Google sign-in successful. OTP sent to your Gmail.",
+                    "info"
+                );
+            }
+            else if (mode === "signup") {
+                setTab("signup");
+                restorePendingOtpIfAny();
+            } else setTab("user");
+            if (denied === "1" && (!session || session.role !== "admin")) {
+                showAlert("Admin access required. Please login with admin credentials.", "error");
+            }
+            if (oauthError) showAlert(oauthError, "error");
+
+            if (session) {
+                sessionBox.classList.remove("d-none");
+                const redirect = session.role === "admin" ? "./admin-panel.html" : "../pages/home.html";
+                const roleLabel = session.role === "admin" ? "Admin" : session.role === "guest" ? "Guest" : "User";
+                sessionBox.innerHTML = "Already logged in as <strong>" + session.name + "</strong> (" + roleLabel + "). "
+                    + "<button class='btn btn-sm btn-outline-light ms-2' id='continueBtn' type='button'>Continue</button> "
+                    + "<span class='text-secondary'>or</span> "
+                    + "<button class='btn btn-sm btn-outline-light ms-2' id='logoutBtn' type='button'>Logout</button>";
+                const continueBtn = document.getElementById("continueBtn");
+                if (continueBtn) {
+                    continueBtn.addEventListener("click", function () {
+                        window.location.assign(redirect);
+                    });
+                }
+                const logoutBtn = document.getElementById("logoutBtn");
+                if (logoutBtn) {
+                    logoutBtn.addEventListener("click", function () {
+                        window.FoodieAuth.logout("./form.html");
+                    });
+                }
+            }
+
+            applyBackendAuthMode();
+        })();
+    </script>
+</body>
+</html>
+
+
+
+
+
+

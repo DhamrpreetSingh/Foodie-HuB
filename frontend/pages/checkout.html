@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#ff6f4d">
+    <link rel="manifest" href="../manifest.webmanifest">
+    <title>FoodieHub - Checkout</title>
+    <link href="../bootstrap/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/advanced-ui.css">
+    <link rel="icon" href="../assets/Main/logo.webp" type="image/webp">
+    <style>
+        .checkout-surface {
+            background: linear-gradient(145deg, rgba(16, 21, 27, 0.96), rgba(11, 15, 20, 0.96));
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 1rem;
+            padding: 1rem;
+            backdrop-filter: blur(10px);
+            color: #eaf0f6;
+            box-shadow: 0 18px 28px -18px rgba(0, 0, 0, 0.65);
+            transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        #checkout-main {
+            color: #dce5ee;
+            background:
+                radial-gradient(circle at 12% 22%, rgba(255, 99, 68, 0.11), transparent 35%),
+                radial-gradient(circle at 86% 8%, rgba(52, 152, 219, 0.1), transparent 30%),
+                linear-gradient(145deg, #0d1217 0%, #090d12 100%);
+        }
+
+        .checkout-hero-section {
+            background:
+                radial-gradient(circle at 14% 15%, rgba(255, 99, 68, 0.14), transparent 34%),
+                radial-gradient(circle at 82% 70%, rgba(52, 152, 219, 0.1), transparent 30%),
+                linear-gradient(145deg, #0a0f14 0%, #05090d 100%) !important;
+        }
+
+        .checkout-surface h3,
+        .checkout-surface h4,
+        .checkout-surface strong,
+        .checkout-surface .fw-semibold {
+            color: #f6faff;
+        }
+
+        .checkout-surface .form-label,
+        .checkout-surface .form-check-label {
+            color: #dce5ee;
+        }
+
+        .checkout-surface .form-control,
+        .checkout-surface .form-select {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            color: #f8fbff;
+        }
+
+        .checkout-surface .form-control::placeholder {
+            color: #a9b7c4;
+        }
+
+        .checkout-surface .form-control:focus,
+        .checkout-surface .form-select:focus {
+            background: rgba(255, 255, 255, 0.08);
+            color: #ffffff;
+            border-color: rgba(255, 127, 102, 0.65);
+            box-shadow: 0 0 0 0.2rem rgba(255, 127, 102, 0.2);
+        }
+
+        .checkout-surface .form-select option,
+        #deliveryTime option {
+            background: #101720;
+            color: #f8fbff;
+        }
+
+        .checkout-surface .text-muted {
+            color: #9fb0bf !important;
+        }
+
+        #checkoutGateAuto,
+        #checkoutGateAuto strong,
+        #checkoutGateAuto span {
+            color: #2f2500 !important;
+        }
+
+        .checkout-surface:hover {
+            transform: translateY(-2px);
+            border-color: rgba(255, 127, 102, 0.28);
+            box-shadow: 0 24px 34px -20px rgba(255, 99, 68, 0.28);
+        }
+
+        .assurance-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 0.7rem;
+        }
+
+        .assurance-chip {
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 0.8rem;
+            padding: 0.65rem;
+            text-align: center;
+            font-size: 0.84rem;
+            color: #dce5ee;
+        }
+
+        .assurance-chip i {
+            color: #ff9c88;
+            margin-right: 0.25rem;
+        }
+
+        .checkout-stepbar {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 0.5rem;
+        }
+
+        .checkout-step {
+            border: 1px solid rgba(255, 255, 255, 0.13);
+            border-radius: 0.8rem;
+            padding: 0.6rem;
+            text-align: center;
+            font-size: 0.85rem;
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .checkout-step.active {
+            border-color: rgba(255, 127, 102, 0.7);
+            background: rgba(255, 127, 102, 0.14);
+        }
+
+        .validation-summary {
+            border: 1px solid rgba(255, 193, 7, 0.5);
+            background: rgba(255, 193, 7, 0.12);
+            color: #ffe8a0;
+            border-radius: 0.75rem;
+            padding: 0.55rem 0.7rem;
+            margin-bottom: 0.85rem;
+            animation: checkoutWarnIn 0.24s ease;
+        }
+
+        .inline-error {
+            color: #ff9b9b;
+            font-size: 0.78rem;
+            margin-top: 0.3rem;
+            display: block;
+            min-height: 1.05rem;
+        }
+
+        .checkout-surface .form-control.is-invalid,
+        .checkout-surface .form-check-input.is-invalid {
+            border-color: rgba(255, 99, 99, 0.72);
+            box-shadow: 0 0 0 0.18rem rgba(255, 99, 99, 0.16);
+        }
+
+        .checkout-surface .form-control.is-valid,
+        .checkout-surface .form-check-input.is-valid {
+            border-color: rgba(45, 197, 135, 0.72);
+            box-shadow: 0 0 0 0.16rem rgba(45, 197, 135, 0.14);
+        }
+
+        #checkoutProgressHint {
+            color: #a9bfd3 !important;
+            letter-spacing: 0.01em;
+        }
+
+        @keyframes checkoutWarnIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .checkout-item {
+            display: flex;
+            justify-content: space-between;
+            gap: 0.75rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 0.75rem 0;
+        }
+
+        .checkout-item:last-child {
+            border-bottom: 0;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .payment-choices {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 0.6rem;
+        }
+
+        .payment-choice input {
+            display: none;
+        }
+
+        .payment-choice label {
+            display: block;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 0.8rem;
+            padding: 0.65rem;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .payment-choice input:checked + label {
+            border-color: #ff7f66;
+            background: rgba(255, 127, 102, 0.14);
+        }
+
+
+        .kpi-row {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 0.6rem;
+        }
+
+        .kpi-row article {
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 0.75rem;
+            padding: 0.55rem;
+            background: rgba(255, 255, 255, 0.03);
+            text-align: center;
+        }
+
+        .kpi-row strong {
+            display: block;
+            font-size: 1.05rem;
+        }
+
+        .summary-sticky {
+            position: sticky;
+            top: 92px;
+        }
+
+        .checkout-guard {
+            border: 1px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 0.8rem;
+            padding: 0.55rem 0.7rem;
+            margin-top: 0.7rem;
+            font-size: 0.82rem;
+            color: #a9b7c4;
+        }
+
+        @media (max-width: 767.98px) {
+            .payment-choices,
+            .kpi-row,
+            .checkout-stepbar {
+                grid-template-columns: 1fr;
+            }
+
+            .assurance-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .summary-sticky {
+                position: static;
+            }
+        }
+
+        @media (max-width: 430px) {
+            .checkout-surface {
+                padding: 0.85rem;
+            }
+
+            .checkout-hero-section h1 {
+                font-size: 2rem;
+            }
+
+            .payment-choice label,
+            #placeOrderBtn {
+                min-height: 50px;
+            }
+
+            .checkout-step {
+                padding: 0.52rem;
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (max-width: 390px) {
+            .assurance-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .checkout-surface {
+                border-radius: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm sticky-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="./home.html">
+                <img src="../assets/Main/logo.webp" alt="FoodieHub Logo" width="40" height="40" class="d-inline-block align-text-top me-2">
+                FoodieHub
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="./home.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="./menu.html">Menu</a></li>
+                    <li class="nav-item"><a class="nav-link" href="./about.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="./contact.html">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link" href="./orders.html">Orders</a></li>
+                    <li class="nav-item"><a class="btn btn-outline-warning ms-2" href="./cart.html">Cart <span id="navCartCount" class="badge bg-dark ms-1">0</span></a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section class="py-5 hero-section checkout-hero-section">
+        <div class="container">
+            <div class="row align-items-center g-4">
+                <div class="col-lg-8">
+                    <h1 class="display-5 fw-bold mb-3">Secure Checkout</h1>
+                    <p class="lead mb-3">Confirm details and place your order in less than a minute.</p>
+                    <div class="checkout-stepbar" id="checkoutStepbar">
+                        <div class="checkout-step active" data-step="1">1. Delivery</div>
+                        <div class="checkout-step" data-step="2">2. Payment</div>
+                        <div class="checkout-step" data-step="3">3. Review</div>
+                    </div>
+                    <small id="checkoutProgressHint" class="text-muted d-block mt-2">Complete address and payment details to continue. Card and UPI use Razorpay test checkout.</small>
+                </div>
+                <div class="col-lg-4 text-lg-end">
+                    <a href="./cart.html" class="btn btn-outline-secondary btn-lg">Back To Cart</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-5" id="checkout-main">
+        <div class="container">
+            <div class="checkout-surface mb-4">
+                <div class="assurance-grid">
+                    <div class="assurance-chip"><i class="bi bi-patch-check-fill"></i> Secure Checkout</div>
+                    <div class="assurance-chip"><i class="bi bi-clock-history"></i> Live ETA</div>
+                    <div class="assurance-chip"><i class="bi bi-shield-lock"></i> Safe Payments</div>
+                    <div class="assurance-chip"><i class="bi bi-headset"></i> 24/7 Support</div>
+                </div>
+            </div>
+            <div class="row g-4 align-items-start">
+                <div class="col-lg-7">
+                    <form id="checkoutForm" class="checkout-surface" novalidate>
+                        <div id="validationSummary" class="validation-summary d-none"></div>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h3 class="mb-0">Delivery Information</h3>
+                            <small id="draftInfo" class="text-muted">Draft auto-save on</small>
+                        </div>
+
+                        <div class="kpi-row mb-3">
+                            <article><strong id="kpiItems">0</strong><small class="text-muted">Items</small></article>
+                            <article><strong id="kpiEta">--</strong><small class="text-muted">ETA</small></article>
+                            <article><strong id="kpiTotal">&#8377;0.00</strong><small class="text-muted">Total</small></article>
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="fullName" class="form-label">Full Name</label>
+                                <input id="fullName" class="form-control" required minlength="2">
+                                <div class="invalid-feedback">Enter your full name.</div>
+                                <small id="inlineError-fullName" class="inline-error d-none"></small>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="phone" class="form-label">Phone</label>
+                                <input id="phone" class="form-control" required pattern="^[+0-9 ()-]{8,}$">
+                                <div class="invalid-feedback">Enter a valid phone number.</div>
+                                <small id="inlineError-phone" class="inline-error d-none"></small>
+                            </div>
+                            <div class="col-12">
+                                <label for="address" class="form-label">Address</label>
+                                <input id="address" class="form-control" required minlength="5">
+                                <div class="invalid-feedback">Enter delivery address.</div>
+                                <small id="inlineError-address" class="inline-error d-none"></small>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="city" class="form-label">City</label>
+                                <input id="city" class="form-control" required>
+                                <div class="invalid-feedback">Enter city.</div>
+                                <small id="inlineError-city" class="inline-error d-none"></small>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="zip" class="form-label">ZIP</label>
+                                <input id="zip" class="form-control" required>
+                                <div class="invalid-feedback">Enter ZIP code.</div>
+                                <small id="inlineError-zip" class="inline-error d-none"></small>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="deliveryTime" class="form-label">Delivery Slot</label>
+                                <select id="deliveryTime" class="form-select"></select>
+                            </div>
+                            <div class="col-12">
+                                <label for="notes" class="form-label">Order Notes</label>
+                                <textarea id="notes" class="form-control" rows="3" placeholder="Gate number, landmark, spice preference..."></textarea>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="termsCheck" required>
+                                    <label class="form-check-label" for="termsCheck">I confirm the address and agree to order terms.</label>
+                                    <div class="invalid-feedback">Please accept terms before placing the order.</div>
+                                    <small id="inlineError-termsCheck" class="inline-error d-none"></small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <h4 class="mb-3">Payment Method</h4>
+                        <div class="payment-choices mb-3">
+                            <div class="payment-choice">
+                                <input type="radio" id="payCard" name="payment" value="Card" checked>
+                                <label for="payCard"><i class="bi bi-credit-card me-1"></i> Card</label>
+                            </div>
+                            <div class="payment-choice">
+                                <input type="radio" id="payUpi" name="payment" value="UPI">
+                                <label for="payUpi"><i class="bi bi-phone me-1"></i> UPI</label>
+                            </div>
+                            <div class="payment-choice">
+                                <input type="radio" id="payCod" name="payment" value="Cash on Delivery">
+                                <label for="payCod"><i class="bi bi-cash me-1"></i> Cash</label>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" id="placeOrderBtn" class="btn btn-primary btn-lg">Place Order</button>
+                            <a href="./menu.html" class="btn btn-outline-secondary">Add More Food</a>
+                        </div>
+
+                        <div id="orderSuccess" class="alert alert-success d-none mt-3 mb-0" role="alert">
+                            Order placed successfully. Tracking ID: <strong id="trackingId">FH-000000</strong>
+                            <a href="./orders.html" class="alert-link ms-2">View Orders</a>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="col-lg-5">
+                    <div class="checkout-surface summary-sticky">
+                        <h4 class="mb-3">Order Recap</h4>
+                        <div id="couponBadge" class="badge bg-success-subtle text-success-emphasis border mb-2 d-none"></div>
+                        <div id="checkoutItems"></div>
+                        <div id="checkoutEmpty" class="text-center text-muted d-none py-3">Your cart is empty.</div>
+
+                        <hr class="my-3">
+
+                        <div class="summary-row"><span>Subtotal</span><strong id="subtotalText">&#8377;0.00</strong></div>
+                        <div class="summary-row"><span>Discount</span><strong id="discountText">-&#8377;0.00</strong></div>
+                        <div class="summary-row"><span>Tax</span><strong id="taxText">&#8377;0.00</strong></div>
+                        <div class="summary-row"><span>Delivery</span><strong id="deliveryText">&#8377;0.00</strong></div>
+                        <div class="summary-row"><span>Tip</span><strong id="tipText">&#8377;0.00</strong></div>
+                        <div class="summary-row pt-2 border-top"><span class="fw-bold">Total</span><strong id="totalText">&#8377;0.00</strong></div>
+
+                        <small class="text-muted d-block mt-2">Coupon and preferences are synced from cart page automatically.</small>
+                        <div class="checkout-guard"><i class="bi bi-lock-fill me-1"></i> We use secure transport (HTTPS), Razorpay test checkout for online payments, and server-side validation for checkout data.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-dark text-light pt-5 pb-3">
+        <div class="container">
+            <div class="text-center"><small>&copy; 2026 FoodieHub. All rights reserved.</small></div>
+        </div>
+    </footer>
+
+    <script src="../bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="../js/ui-enhancements.js"></script>
+    <script src="../js/auth.js?v=20260217c"></script>
+    <script src="../js/app.js?v=20260331b"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+

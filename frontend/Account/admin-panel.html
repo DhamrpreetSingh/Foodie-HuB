@@ -1,0 +1,2174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#ff6f4d">
+    <link rel="manifest" href="../manifest.webmanifest">
+    <title>FoodieHub - Admin Panel</title>
+    <link href="../bootstrap/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/advanced-ui.css">
+    <link rel="icon" href="../assets/Main/logo.webp" type="image/webp">
+    <style>
+        :root {
+            --admin-bg-0: #060910;
+            --admin-bg-1: #0a1320;
+            --admin-bg-2: #0d1a29;
+            --admin-card: linear-gradient(165deg, rgba(11, 19, 31, 0.95), rgba(7, 12, 20, 0.88));
+            --admin-card-soft: linear-gradient(155deg, rgba(17, 28, 43, 0.8), rgba(11, 18, 29, 0.72));
+            --admin-border: rgba(165, 187, 214, 0.2);
+            --admin-border-strong: rgba(255, 255, 255, 0.24);
+            --admin-text: #f3f8ff;
+            --admin-text-soft: #a9bfd7;
+            --admin-accent-a: #ff8256;
+            --admin-accent-b: #33c3ff;
+            --admin-shadow: 0 26px 48px -30px rgba(0, 0, 0, 0.8);
+            --admin-radius: 1.1rem;
+        }
+
+        body.admin-page {
+            min-height: 100vh;
+            position: relative;
+            isolation: isolate;
+            overflow-x: hidden;
+            font-family: "Manrope", "Segoe UI", sans-serif;
+            color: var(--admin-text);
+            background:
+                radial-gradient(circle at 14% 15%, rgba(255, 130, 86, 0.2), transparent 30%),
+                radial-gradient(circle at 85% 7%, rgba(51, 195, 255, 0.19), transparent 31%),
+                linear-gradient(145deg, var(--admin-bg-0) 0%, var(--admin-bg-1) 58%, var(--admin-bg-2) 100%);
+        }
+
+        body.admin-page::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: -2;
+            background:
+                radial-gradient(circle at 84% 83%, rgba(255, 130, 86, 0.08), transparent 38%),
+                radial-gradient(circle at 7% 75%, rgba(51, 195, 255, 0.07), transparent 40%);
+        }
+
+        body.admin-page::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+            opacity: 0.08;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.4) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.4) 1px, transparent 1px);
+            background-size: 48px 48px;
+            mask-image: radial-gradient(circle at center, black 28%, transparent 78%);
+        }
+
+        body.admin-page main > .container {
+            max-width: 1380px;
+        }
+
+        body.admin-page .navbar {
+            background: rgba(5, 11, 18, 0.8) !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+        }
+
+        body.admin-page .navbar-brand {
+            font-family: "Space Grotesk", "Segoe UI", sans-serif;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+        }
+
+        body.admin-page .navbar .btn-outline-light {
+            border-color: rgba(186, 210, 235, 0.45);
+            color: #e5effa;
+        }
+
+        body.admin-page .navbar .btn-outline-light:hover {
+            border-color: rgba(255, 130, 86, 0.7);
+            background: rgba(255, 130, 86, 0.14);
+            color: #ffffff;
+        }
+
+        .admin-shell {
+            display: grid;
+            grid-template-columns: minmax(0, 1.7fr) minmax(320px, 1fr);
+            grid-template-areas:
+                "overview overview"
+                "kpi kpi"
+                "orders orders"
+                "revenue menu"
+                "users users"
+                "audit audit";
+            gap: 1rem;
+            align-items: start;
+        }
+
+        #overviewSection { grid-area: overview; }
+        #kpiSection { grid-area: kpi; }
+        #ordersSection { grid-area: orders; }
+        #revenueSection { grid-area: revenue; }
+        #menuSection { grid-area: menu; }
+        #usersSection { grid-area: users; }
+        #auditSection { grid-area: audit; }
+
+        #ordersSection { --section-accent: #ff9468; }
+        #revenueSection { --section-accent: #44d0ff; }
+        #menuSection { --section-accent: #5cd59e; }
+        #usersSection { --section-accent: #f8b152; }
+        #auditSection { --section-accent: #af9dff; }
+        #kpiSection { --section-accent: #ff8256; }
+
+        .admin-shell > #revenueSection,
+        .admin-shell > #menuSection {
+            align-self: stretch;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #overviewSection,
+        #kpiSection,
+        #ordersSection,
+        #revenueSection,
+        #usersSection,
+        #menuSection,
+        #auditSection {
+            scroll-margin-top: 6rem;
+        }
+
+        .admin-hero,
+        .admin-surface {
+            border: 1px solid var(--admin-border);
+            border-radius: var(--admin-radius);
+            box-shadow: var(--admin-shadow);
+            backdrop-filter: blur(10px);
+        }
+
+        .admin-hero {
+            position: relative;
+            overflow: hidden;
+            padding: 1.3rem 1.35rem;
+            background: linear-gradient(142deg, rgba(14, 22, 35, 0.98), rgba(9, 15, 24, 0.92));
+        }
+
+        .admin-hero::after {
+            content: "";
+            position: absolute;
+            right: -8%;
+            top: -55%;
+            width: 320px;
+            height: 320px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 130, 86, 0.25), transparent 66%);
+            pointer-events: none;
+        }
+
+        .admin-hero h2 {
+            font-family: "Space Grotesk", "Segoe UI", sans-serif;
+            font-size: clamp(1.35rem, 2.2vw, 1.8rem);
+            letter-spacing: 0.2px;
+        }
+
+        #adminName {
+            font-family: "Space Grotesk", "Segoe UI", sans-serif;
+            font-size: 1.04rem;
+            letter-spacing: 0.2px;
+        }
+
+        .admin-hero-lead {
+            color: #bad0e4;
+        }
+
+        .admin-session-meta {
+            margin-top: 0.2rem;
+            color: var(--admin-text-soft);
+            font-size: 0.82rem;
+        }
+
+        .admin-sync-bar {
+            margin-top: 1rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.55rem;
+        }
+
+        #refreshAllBtn {
+            border-color: rgba(255, 255, 255, 0.42);
+            color: #f4f8ff;
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        #refreshAllBtn:hover {
+            border-color: rgba(51, 195, 255, 0.68);
+            background: rgba(51, 195, 255, 0.18);
+            color: #ffffff;
+        }
+
+        .admin-sync-bar .form-check-label {
+            color: #c7d8ea;
+            font-size: 0.83rem;
+        }
+
+        .section-jump {
+            margin-top: 1rem;
+            display: grid;
+            grid-template-columns: repeat(6, minmax(0, 1fr));
+            gap: 0.42rem;
+            padding: 0.45rem;
+            border: 1px solid rgba(177, 200, 224, 0.24);
+            border-radius: 0.85rem;
+            background: rgba(9, 15, 24, 0.68);
+        }
+
+        .section-tab {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.42rem;
+            border-radius: 0.62rem;
+            padding: 0.42rem 0.55rem;
+            border: 1px solid transparent;
+            color: #d8e6f4;
+            text-decoration: none;
+            background: rgba(255, 255, 255, 0.02);
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.01em;
+            transition: all 0.2s ease;
+        }
+
+        .section-tab .bi {
+            font-size: 0.88rem;
+            opacity: 0.9;
+        }
+
+        .section-tab-index {
+            min-width: 1.28rem;
+            height: 1.28rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 999px;
+            font-size: 0.66rem;
+            font-weight: 800;
+            letter-spacing: 0.04em;
+            color: rgba(13, 22, 34, 0.95);
+            background: rgba(226, 236, 246, 0.9);
+        }
+
+        .section-tab:hover {
+            border-color: rgba(255, 130, 86, 0.74);
+            background: rgba(255, 130, 86, 0.17);
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        .section-tab.is-active {
+            border-color: rgba(255, 255, 255, 0.38);
+            background: linear-gradient(120deg, rgba(255, 130, 86, 0.31), rgba(51, 195, 255, 0.26));
+            color: #ffffff;
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.09);
+        }
+
+        .section-tab:hover .section-tab-index,
+        .section-tab.is-active .section-tab-index {
+            background: rgba(255, 255, 255, 0.98);
+            color: #0b1623;
+        }
+
+        .admin-surface {
+            padding: 1.05rem 1.1rem;
+            background: var(--admin-card);
+        }
+
+        .admin-block-head {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 0.7rem;
+            margin-bottom: 0.9rem;
+            padding-bottom: 0.72rem;
+            border-bottom: 1px solid rgba(180, 199, 220, 0.16);
+        }
+
+        .admin-block-head h3 {
+            margin: 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.52rem;
+            font-family: "Space Grotesk", "Segoe UI", sans-serif;
+            font-size: 1.02rem;
+            letter-spacing: 0.12px;
+        }
+
+        .admin-block-head h3::before {
+            content: "";
+            width: 0.58rem;
+            height: 0.58rem;
+            border-radius: 50%;
+            background: var(--section-accent, var(--admin-accent-a));
+            box-shadow: 0 0 0 4px rgba(255, 130, 86, 0.14);
+        }
+
+        .admin-block-meta {
+            margin: 0.14rem 0 0;
+            color: var(--admin-text-soft);
+            font-size: 0.82rem;
+            line-height: 1.25;
+        }
+
+        .kpi-card {
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(188, 206, 225, 0.18);
+            border-radius: 0.95rem;
+            background: var(--admin-card-soft);
+            padding: 0.9rem 0.95rem;
+            height: 100%;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+        }
+
+        .kpi-card::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--kpi-accent, var(--admin-accent-a)), transparent 88%);
+        }
+
+        #kpiSection .row > div:nth-child(1) .kpi-card { --kpi-accent: #ff8f62; }
+        #kpiSection .row > div:nth-child(2) .kpi-card { --kpi-accent: #ffb15f; }
+        #kpiSection .row > div:nth-child(3) .kpi-card { --kpi-accent: #6fd0ff; }
+        #kpiSection .row > div:nth-child(4) .kpi-card { --kpi-accent: #8ec5ff; }
+        #kpiSection .row > div:nth-child(5) .kpi-card { --kpi-accent: #7ce1bb; }
+        #kpiSection .row > div:nth-child(6) .kpi-card { --kpi-accent: #c6b0ff; }
+        #kpiSection .row > div:nth-child(7) .kpi-card { --kpi-accent: #ffd06b; }
+
+        .kpi-label {
+            margin-bottom: 0.32rem;
+            color: #a8bfd5;
+            font-size: 0.79rem;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        .kpi-value {
+            margin: 0;
+            color: #f4f9ff;
+            font-family: "Space Grotesk", "Segoe UI", sans-serif;
+            font-size: clamp(1.25rem, 2vw, 1.58rem);
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .kpi-value.fs-5 {
+            font-size: 1.1rem !important;
+        }
+
+        .admin-controls {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 0.5rem;
+        }
+
+        .admin-filter,
+        .user-search-input,
+        .status-select,
+        .admin-surface .form-control,
+        .admin-surface .form-select {
+            min-height: 2.15rem;
+            background: rgba(18, 30, 45, 0.88);
+            color: #ebf4ff;
+            border: 1px solid rgba(179, 201, 225, 0.24);
+            border-radius: 0.64rem;
+        }
+
+        .admin-filter,
+        .user-search-input {
+            min-width: 220px;
+        }
+
+        .user-search-input::placeholder {
+            color: #9ab1c7;
+        }
+
+        .admin-surface .form-control:focus,
+        .admin-surface .form-select:focus,
+        .status-select:focus,
+        .user-search-input:focus {
+            border-color: rgba(255, 130, 86, 0.72);
+            box-shadow: 0 0 0 0.2rem rgba(255, 130, 86, 0.18);
+            background: rgba(23, 35, 52, 0.94);
+            color: #f7fbff;
+        }
+
+        .status-select option {
+            color: #101215;
+            background: #ffffff;
+        }
+
+        .table-responsive {
+            border: 1px solid rgba(181, 201, 225, 0.18);
+            border-radius: 0.85rem;
+            background: rgba(7, 12, 20, 0.66);
+        }
+
+        .table-dark {
+            --bs-table-bg: transparent;
+            --bs-table-striped-bg: rgba(255, 255, 255, 0.02);
+            --bs-table-hover-bg: rgba(255, 255, 255, 0.06);
+        }
+
+        .table-dark th,
+        .table-dark td {
+            border-color: rgba(179, 200, 224, 0.14);
+            vertical-align: middle;
+        }
+
+        .table-dark thead th {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            background: rgba(17, 28, 43, 0.96);
+            color: #dce9f7;
+            font-size: 0.82rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            font-weight: 700;
+        }
+
+        .empty-orders {
+            border: 1px dashed rgba(182, 202, 224, 0.3);
+            border-radius: 0.9rem;
+            padding: 1.2rem;
+            text-align: center;
+            color: #9eb4c9;
+            background: rgba(18, 28, 42, 0.45);
+        }
+
+        .chart-wrap {
+            border: 1px solid rgba(183, 205, 231, 0.2);
+            border-radius: 0.9rem;
+            padding: 0.85rem;
+            background: linear-gradient(160deg, rgba(16, 27, 41, 0.78), rgba(10, 18, 29, 0.58));
+        }
+
+        #revenueSection .chart-wrap {
+            flex: 1;
+            min-height: 0;
+            height: 100%;
+        }
+
+        .goal-card {
+            margin-top: 0.85rem;
+            border: 1px solid rgba(183, 205, 231, 0.2);
+            border-radius: 0.9rem;
+            padding: 0.85rem;
+            background: linear-gradient(160deg, rgba(16, 27, 41, 0.78), rgba(10, 18, 29, 0.58));
+        }
+
+        .goal-card .progress {
+            height: 10px;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .goal-card .progress-bar {
+            background: linear-gradient(90deg, #ff9b63, #46c8ff);
+        }
+
+        #revenueChart {
+            width: 100%;
+            height: 100%;
+            min-height: 280px;
+            display: block;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.9rem;
+        }
+
+        .menu-box {
+            border: 1px solid rgba(184, 205, 227, 0.19);
+            border-radius: 0.9rem;
+            padding: 0.9rem;
+            background: rgba(9, 15, 24, 0.66);
+        }
+
+        .menu-box h4 {
+            font-family: "Space Grotesk", "Segoe UI", sans-serif;
+            font-size: 0.94rem;
+            margin-bottom: 0.75rem !important;
+        }
+
+        .audit-table th,
+        .audit-table td {
+            white-space: nowrap;
+            font-size: 0.81rem;
+        }
+
+        .audit-table td small {
+            color: #9db4ca;
+        }
+
+        #backendStatusBadge,
+        #orderCountBadge,
+        #menuCountBadge,
+        #userCountBadge,
+        #loginEventsBadge,
+        #registrationEventsBadge {
+            border: 1px solid rgba(202, 218, 236, 0.26);
+            font-weight: 700;
+        }
+
+        .admin-shell > section {
+            animation: admin-rise-in 0.52s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+        }
+
+        .admin-shell > section:nth-child(2) { animation-delay: 0.04s; }
+        .admin-shell > section:nth-child(3) { animation-delay: 0.08s; }
+        .admin-shell > section:nth-child(4) { animation-delay: 0.12s; }
+        .admin-shell > section:nth-child(5) { animation-delay: 0.16s; }
+        .admin-shell > section:nth-child(6) { animation-delay: 0.2s; }
+        .admin-shell > section:nth-child(7) { animation-delay: 0.24s; }
+
+        @keyframes admin-rise-in {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .admin-shell > section {
+                animation: none;
+            }
+        }
+
+        @media (max-width: 1399.98px) {
+            body.admin-page main > .container {
+                max-width: 1240px;
+            }
+        }
+
+        @media (max-width: 1199.98px) {
+            .admin-shell {
+                grid-template-columns: 1fr;
+                grid-template-areas:
+                    "overview"
+                    "kpi"
+                    "orders"
+                    "revenue"
+                    "menu"
+                    "users"
+                    "audit";
+            }
+
+            .section-jump {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+
+            .menu-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 991.98px) {
+            .menu-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 767.98px) {
+            body.admin-page .navbar .container {
+                gap: 0.55rem;
+            }
+
+            body.admin-page .navbar .container > .d-flex {
+                width: 100%;
+                justify-content: flex-end;
+                flex-wrap: wrap;
+            }
+
+            body.admin-page .navbar .container > .d-flex .btn {
+                flex: 1 1 auto;
+                min-width: 120px;
+            }
+
+            .admin-hero,
+            .admin-surface {
+                border-radius: 0.95rem;
+            }
+
+            .section-jump {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .section-tab {
+                justify-content: flex-start;
+                padding: 0.46rem 0.6rem;
+            }
+
+            .admin-controls {
+                width: 100%;
+                justify-content: stretch;
+            }
+
+            .admin-controls > * {
+                width: 100%;
+            }
+
+            .admin-filter,
+            .status-select,
+            .user-search-input {
+                min-width: 0;
+            }
+
+            #ordersTable {
+                min-width: 860px;
+            }
+
+            #ordersTable th,
+            #ordersTable td {
+                font-size: 0.84rem;
+                white-space: nowrap;
+            }
+
+            #revenueChart {
+                min-height: 232px;
+            }
+        }
+
+        @media (max-width: 430px) {
+            .admin-hero,
+            .admin-surface {
+                padding: 0.9rem 0.85rem;
+            }
+
+            .section-jump {
+                grid-template-columns: 1fr;
+            }
+
+            .table-responsive {
+                font-size: 0.78rem;
+            }
+        }
+
+        @media (max-width: 390px) {
+            .admin-block-head {
+                gap: 0.5rem;
+            }
+
+            .kpi-value {
+                font-size: 1.08rem;
+            }
+
+            .section-tab {
+                font-size: 0.76rem;
+            }
+        }
+    </style>
+</head>
+<body class="admin-page">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm sticky-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="../index.html">
+                <img src="../assets/Main/logo.webp" alt="FoodieHub Logo" width="40" height="40" class="d-inline-block align-text-top me-2">
+                FoodieHub Admin
+            </a>
+            <div class="d-flex align-items-center gap-2">
+                <a class="btn btn-outline-light btn-sm" href="../pages/home.html">User Site</a>
+                <button type="button" class="btn btn-outline-warning btn-sm" id="logoutBtn">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="py-4">
+        <div class="container">
+            <div class="admin-shell">
+                <section class="admin-hero" id="overviewSection">
+                    <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-2">
+                        <div>
+                            <span class="text-warning text-uppercase small fw-semibold">Control Center</span>
+                            <h2 class="h3 mb-1">Admin Panel Dashboard</h2>
+                            <p class="mb-0 admin-hero-lead">Backend-connected admin control panel.</p>
+                        </div>
+                        <div class="text-lg-end">
+                            <div class="small text-secondary">Logged in as</div>
+                            <strong id="adminName">Admin</strong>
+                            <div id="adminIdentity" class="admin-session-meta">-</div>
+                            <div id="sessionSince" class="admin-session-meta">-</div>
+                        </div>
+                    </div>
+                    <div class="admin-sync-bar">
+                        <span class="badge text-bg-secondary" id="backendStatusBadge">Backend: checking...</span>
+                        <span class="small text-secondary">Last sync: <strong id="lastSyncAt">Never</strong></span>
+                        <button type="button" class="btn btn-outline-light btn-sm" id="refreshAllBtn">
+                            <i class="bi bi-arrow-clockwise me-1"></i>Refresh Now
+                        </button>
+                        <div class="form-check form-switch mb-0">
+                            <input class="form-check-input" type="checkbox" role="switch" id="autoRefreshToggle" checked>
+                            <label class="form-check-label" for="autoRefreshToggle">Auto Refresh (30s)</label>
+                        </div>
+                    </div>
+                    <nav class="section-jump" aria-label="Admin quick navigation">
+                        <a class="section-tab is-active" data-tab-link href="#kpiSection"><span class="section-tab-index">01</span><i class="bi bi-speedometer2"></i>Overview</a>
+                        <a class="section-tab" data-tab-link href="#ordersSection"><span class="section-tab-index">02</span><i class="bi bi-receipt-cutoff"></i>Orders</a>
+                        <a class="section-tab" data-tab-link href="#revenueSection"><span class="section-tab-index">03</span><i class="bi bi-graph-up-arrow"></i>Revenue</a>
+                        <a class="section-tab" data-tab-link href="#menuSection"><span class="section-tab-index">04</span><i class="bi bi-grid-3x3-gap"></i>Menu</a>
+                        <a class="section-tab" data-tab-link href="#usersSection"><span class="section-tab-index">05</span><i class="bi bi-people"></i>Users</a>
+                        <a class="section-tab" data-tab-link href="#auditSection"><span class="section-tab-index">06</span><i class="bi bi-shield-check"></i>Audit</a>
+                    </nav>
+                </section>
+
+            <section class="admin-surface p-3" id="kpiSection">
+                <div class="admin-block-head">
+                    <div>
+                        <h3 class="h5 mb-0">Performance Snapshot</h3>
+                        <p class="admin-block-meta">Live summary based on current dashboard data.</p>
+                    </div>
+                </div>
+                <div class="row g-3">
+                    <div class="col-md-6 col-xl-3">
+                        <article class="kpi-card">
+                            <p class="kpi-label">Total Orders</p>
+                            <p class="kpi-value" id="kpiOrders">0</p>
+                        </article>
+                    </div>
+                    <div class="col-md-6 col-xl-3">
+                        <article class="kpi-card">
+                            <p class="kpi-label">Total Revenue</p>
+                            <p class="kpi-value" id="kpiRevenue">Rs0.00</p>
+                        </article>
+                    </div>
+                    <div class="col-md-6 col-xl-3">
+                        <article class="kpi-card">
+                            <p class="kpi-label">Average Order Value</p>
+                            <p class="kpi-value" id="kpiAov">Rs0.00</p>
+                        </article>
+                    </div>
+                    <div class="col-md-6 col-xl-3">
+                        <article class="kpi-card">
+                            <p class="kpi-label">Latest Order Time</p>
+                            <p class="kpi-value fs-5" id="kpiLatest">-</p>
+                        </article>
+                    </div>
+                    <div class="col-md-6 col-xl-3">
+                        <article class="kpi-card">
+                            <p class="kpi-label">Top Dish</p>
+                            <p class="kpi-value fs-5" id="kpiTopDish">-</p>
+                        </article>
+                    </div>
+                    <div class="col-md-6 col-xl-3">
+                        <article class="kpi-card">
+                            <p class="kpi-label">Peak Order Hour</p>
+                            <p class="kpi-value fs-5" id="kpiPeakHour">-</p>
+                        </article>
+                    </div>
+                    <div class="col-md-6 col-xl-3">
+                        <article class="kpi-card">
+                            <p class="kpi-label">Repeat Customers</p>
+                            <p class="kpi-value fs-5" id="kpiRepeatCustomers">0</p>
+                        </article>
+                    </div>
+                </div>
+            </section>
+
+            <section class="admin-surface p-3" id="ordersSection">
+                <div class="admin-block-head">
+                    <div>
+                        <h3 class="h5 mb-0">Recent Orders</h3>
+                        <p class="admin-block-meta">Monitor status and update each order in real time.</p>
+                    </div>
+                    <div class="admin-controls">
+                        <select id="statusFilter" class="form-select form-select-sm admin-filter">
+                            <option value="all">All Status</option>
+                            <option value="placed">Placed</option>
+                            <option value="preparing">Preparing</option>
+                            <option value="out for delivery">Out For Delivery</option>
+                            <option value="delivered">Delivered</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                        <button type="button" class="btn btn-outline-light btn-sm" id="exportOrdersBtn">Export CSV</button>
+                        <span class="badge text-bg-dark" id="orderCountBadge">0 records</span>
+                    </div>
+                </div>
+                <div id="ordersEmpty" class="empty-orders d-none">
+                    No orders available yet. Place orders from the user side to see data here.
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-dark table-striped align-middle mb-0" id="ordersTable">
+                        <thead>
+                            <tr>
+                                <th scope="col">Order ID</th>
+                                <th scope="col">Placed At</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Payment</th>
+                                <th scope="col">Items</th>
+                                <th scope="col">Total</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ordersBody"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="admin-surface p-3" id="revenueSection">
+                <div class="admin-block-head">
+                    <div>
+                        <h3 class="h5 mb-0">Revenue Trend (Last 7 Days)</h3>
+                        <p class="admin-block-meta">Order totals per day.</p>
+                    </div>
+                </div>
+                <div class="chart-wrap">
+                    <canvas id="revenueChart" width="960" height="260" aria-label="Revenue chart"></canvas>
+                </div>
+                <div class="goal-card">
+                    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-2">
+                        <div>
+                            <div class="fw-semibold">Weekly Revenue Goal</div>
+                            <small class="text-secondary">Track achieved vs target for last 7 days.</small>
+                        </div>
+                        <div class="d-flex align-items-center gap-2">
+                            <label for="weeklyGoalInput" class="small text-secondary mb-0">Target (Rs)</label>
+                            <input type="number" id="weeklyGoalInput" class="form-control form-control-sm" min="1" step="1" style="width: 130px;">
+                            <button type="button" id="saveWeeklyGoalBtn" class="btn btn-sm btn-outline-light">Save</button>
+                        </div>
+                    </div>
+                    <div class="progress mb-2" role="progressbar" aria-label="Weekly goal progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                        <div id="weeklyGoalProgress" class="progress-bar" style="width: 0%;"></div>
+                    </div>
+                    <div class="d-flex flex-wrap justify-content-between small">
+                        <span id="weeklyGoalSummary" class="text-secondary">Set your weekly goal.</span>
+                        <span id="weeklyGoalRemaining" class="text-secondary">Remaining: Rs0.00</span>
+                    </div>
+                    <div class="small mt-1">
+                        <span id="weeklyGoalEta" class="text-secondary">Goal ETA: add orders to estimate.</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="admin-surface p-3" id="auditSection">
+                <div class="admin-block-head">
+                    <div>
+                        <h3 class="h5 mb-0">Audit Reports</h3>
+                        <p class="admin-block-meta">Login and registration activity.</p>
+                    </div>
+                    <button type="button" class="btn btn-outline-danger btn-sm" id="clearAuditBtn">Clear Audit Reports</button>
+                </div>
+                <div class="row g-3">
+                    <div class="col-lg-6">
+                        <div class="menu-box h-100">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h4 class="h6 mb-0">Login Events</h4>
+                                <span class="badge text-bg-dark" id="loginEventsBadge">0 events</span>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-dark table-striped align-middle mb-0 audit-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Time</th>
+                                            <th>Identifier</th>
+                                            <th>Method</th>
+                                            <th>Result</th>
+                                            <th>IP</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="loginEventsBody">
+                                        <tr>
+                                            <td colspan="5" class="text-center text-secondary">No login events yet.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="menu-box h-100">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h4 class="h6 mb-0">Registration Events</h4>
+                                <span class="badge text-bg-dark" id="registrationEventsBadge">0 events</span>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-dark table-striped align-middle mb-0 audit-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Time</th>
+                                            <th>Username</th>
+                                            <th>Email</th>
+                                            <th>Source</th>
+                                            <th>IP</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="registrationEventsBody">
+                                        <tr>
+                                            <td colspan="5" class="text-center text-secondary">No registration events yet.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="admin-surface p-3" id="usersSection">
+                <div class="admin-block-head">
+                    <div>
+                        <h3 class="h5 mb-0">User Access Manager</h3>
+                        <p class="admin-block-meta">Search users and control account access state.</p>
+                    </div>
+                    <div class="admin-controls">
+                        <input type="search" id="userSearchInput" class="form-control form-control-sm user-search-input" placeholder="Search by name, email, username">
+                        <span class="badge text-bg-dark" id="userCountBadge">0 users</span>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-dark table-striped align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Username</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                                <th class="text-end">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="userRows">
+                            <tr><td colspan="7" class="text-center text-secondary">Loading users...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="admin-surface p-3" id="menuSection">
+                <div class="admin-block-head">
+                    <div>
+                        <h3 class="h5 mb-0">Menu Manager</h3>
+                        <p class="admin-block-meta">Manage catalog items and pricing from one place.</p>
+                    </div>
+                    <span class="badge text-bg-dark" id="menuCountBadge">0 items</span>
+                </div>
+                <div class="menu-grid">
+                    <div class="menu-box">
+                        <h4 class="h6 mb-3">Menu Items</h4>
+                        <div class="table-responsive">
+                            <table class="table table-dark table-striped align-middle mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Photo</th>
+                                        <th>Name</th>
+                                        <th>Category</th>
+                                        <th>Description</th>
+                                        <th>Price</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="menuRows"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="menu-box">
+                        <h4 class="h6 mb-3">Add Item</h4>
+                        <form id="menuForm" novalidate>
+                            <div class="mb-2">
+                                <label class="form-label" for="menuName">Dish Name</label>
+                                <input id="menuName" class="form-control" required>
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label" for="menuCategory">Category</label>
+                                <select id="menuCategory" class="form-select">
+                                    <option value="veg">Veg</option>
+                                    <option value="nonveg">Non-Veg</option>
+                                    <option value="dessert">Dessert</option>
+                                    <option value="meal">Meal</option>
+                                </select>
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label" for="menuDescription">Description</label>
+                                <textarea id="menuDescription" class="form-control" rows="2" maxlength="1000" placeholder="Write a short dish description"></textarea>
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label" for="menuPrice">Price</label>
+                                <input id="menuPrice" type="number" min="1" class="form-control" required>
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label" for="menuImage">Food Photo</label>
+                                <input id="menuImage" type="file" class="form-control" accept="image/png,image/jpeg,image/webp">
+                                <small class="text-muted">Optional. JPG/PNG/WEBP, max 2 MB.</small>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">Add Menu Item</button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+            </div>
+        </div>
+    </main>
+
+    <script src="../bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="../js/ui-enhancements.js"></script>
+    <script src="../js/auth.js?v=20260217c"></script>
+    <script>
+        (async function () {
+            "use strict";
+
+            async function waitForSession(maxMs) {
+                const deadline = Date.now() + (Number(maxMs) || 1200);
+                while (Date.now() < deadline) {
+                    const s = window.FoodieAuth.getSession();
+                    if (s && s.email) return s;
+                    await new Promise(function (r) { setTimeout(r, 80); });
+                }
+                return window.FoodieAuth.getSession();
+            }
+
+            // auth.js restores cookie-based sessions (Google login) asynchronously.
+            // Admin panel needs to wait for that restore before enforcing role gate.
+            const backendEnabled = await window.FoodieAuth.detectBackend().catch(function () { return false; });
+            if (backendEnabled) {
+                await waitForSession(1200);
+            }
+
+            const adminOk = window.FoodieAuth.requireRole("admin", "./form.html?mode=admin&denied=1");
+            if (!adminOk) return;
+
+            const session = window.FoodieAuth.getSession();
+            const adminName = document.getElementById("adminName");
+            const logoutBtn = document.getElementById("logoutBtn");
+            const ordersBody = document.getElementById("ordersBody");
+            const ordersEmpty = document.getElementById("ordersEmpty");
+            const ordersTable = document.getElementById("ordersTable");
+            const orderCountBadge = document.getElementById("orderCountBadge");
+            const revenueChart = document.getElementById("revenueChart");
+            const weeklyGoalInput = document.getElementById("weeklyGoalInput");
+            const saveWeeklyGoalBtn = document.getElementById("saveWeeklyGoalBtn");
+            const weeklyGoalProgress = document.getElementById("weeklyGoalProgress");
+            const weeklyGoalSummary = document.getElementById("weeklyGoalSummary");
+            const weeklyGoalRemaining = document.getElementById("weeklyGoalRemaining");
+            const weeklyGoalEta = document.getElementById("weeklyGoalEta");
+            const menuRows = document.getElementById("menuRows");
+            const menuCountBadge = document.getElementById("menuCountBadge");
+            const menuForm = document.getElementById("menuForm");
+            const menuImageInput = document.getElementById("menuImage");
+            const statusFilter = document.getElementById("statusFilter");
+            const exportOrdersBtn = document.getElementById("exportOrdersBtn");
+            const loginEventsBody = document.getElementById("loginEventsBody");
+            const loginEventsBadge = document.getElementById("loginEventsBadge");
+            const registrationEventsBody = document.getElementById("registrationEventsBody");
+            const registrationEventsBadge = document.getElementById("registrationEventsBadge");
+            const clearAuditBtn = document.getElementById("clearAuditBtn");
+            const userRows = document.getElementById("userRows");
+            const userSearchInput = document.getElementById("userSearchInput");
+            const userCountBadge = document.getElementById("userCountBadge");
+            const refreshAllBtn = document.getElementById("refreshAllBtn");
+            const autoRefreshToggle = document.getElementById("autoRefreshToggle");
+            const lastSyncAt = document.getElementById("lastSyncAt");
+            const backendStatusBadge = document.getElementById("backendStatusBadge");
+            const adminIdentity = document.getElementById("adminIdentity");
+            const sessionSince = document.getElementById("sessionSince");
+            const sectionTabLinks = Array.from(document.querySelectorAll("[data-tab-link]"));
+
+            const ORDER_STATUSES = ["Placed", "Preparing", "Out for Delivery", "Delivered", "Cancelled"];
+            const WEEKLY_GOAL_KEY = "foodiehub_admin_weekly_goal_v1";
+            let lastRenderedOrders = [];
+            let backendReady = false;
+            let autoRefreshTimer = null;
+            let refreshInFlight = false;
+            let allUsers = [];
+
+            function money(value) {
+                const amount = Number(value) || 0;
+                return "Rs" + amount.toFixed(2);
+            }
+
+            function toast(message, type) {
+                const text = String(message || "").trim();
+                if (!text) return;
+                if (window.FoodieUI && typeof window.FoodieUI.toast === "function") {
+                    window.FoodieUI.toast(text, type || "info");
+                    return;
+                }
+                window.alert(text);
+            }
+
+            function esc(value) {
+                return String(value || "")
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/\"/g, "&quot;")
+                    .replace(/'/g, "&#39;");
+            }
+
+            function formatDate(isoString) {
+                const value = Date.parse(String(isoString || ""));
+                if (!Number.isFinite(value)) return "-";
+                return new Date(value).toLocaleString();
+            }
+
+            function setText(id, value) {
+                const el = document.getElementById(id);
+                if (el) el.textContent = value;
+            }
+
+            function setBackendBadge(ok) {
+                if (!backendStatusBadge) return;
+                backendStatusBadge.classList.remove("text-bg-secondary", "text-bg-success", "text-bg-danger");
+                if (ok === true) {
+                    backendStatusBadge.classList.add("text-bg-success");
+                    backendStatusBadge.textContent = "Backend: online";
+                    return;
+                }
+                if (ok === false) {
+                    backendStatusBadge.classList.add("text-bg-danger");
+                    backendStatusBadge.textContent = "Backend: offline";
+                    return;
+                }
+                backendStatusBadge.classList.add("text-bg-secondary");
+                backendStatusBadge.textContent = "Backend: checking...";
+            }
+
+            function updateLastSync() {
+                if (!lastSyncAt) return;
+                lastSyncAt.textContent = new Date().toLocaleTimeString();
+            }
+
+            function resolveProjectPrefix() {
+                const path = String(window.location.pathname || "/");
+                const lower = path.toLowerCase();
+                const marker = "/frontend/";
+                const markerIndex = lower.indexOf(marker);
+                if (markerIndex >= 0) return path.slice(0, markerIndex);
+                if (lower.endsWith("/frontend")) return path.slice(0, -9);
+                return "";
+            }
+
+            function apiBaseUrl() {
+                const prefix = resolveProjectPrefix().replace(/\/+$/, "");
+                return prefix + "/backend/public/index.php/api";
+            }
+
+            function readCsrfToken() {
+                return String(window.sessionStorage.getItem("foodiehub_csrf_token_v1") || "").trim();
+            }
+
+            function writeCsrfToken(token) {
+                const value = String(token || "").trim();
+                if (!value) return;
+                window.sessionStorage.setItem("foodiehub_csrf_token_v1", value);
+            }
+
+            function captureCsrfToken(response) {
+                if (!response || !response.headers) return;
+                writeCsrfToken(response.headers.get("X-CSRF-Token") || "");
+            }
+
+            function isUnsafeMethod(method) {
+                const value = String(method || "GET").toUpperCase();
+                return value === "POST" || value === "PUT" || value === "PATCH" || value === "DELETE";
+            }
+
+            async function ensureCsrfToken(forceRefresh) {
+                if (!forceRefresh) {
+                    const existing = readCsrfToken();
+                    if (existing) return existing;
+                }
+                const response = await fetch(apiBaseUrl() + "/health", {
+                    method: "GET",
+                    credentials: "include"
+                });
+                captureCsrfToken(response);
+                return readCsrfToken();
+            }
+
+            function imageSrc(value) {
+                const raw = String(value || "").trim().replace(/\\/g, "/");
+                if (!raw) return "";
+                if (/^(https?:)?\/\//i.test(raw) || raw.startsWith("data:")) return raw;
+
+                const prefix = resolveProjectPrefix().replace(/\/+$/, "");
+                if (raw.startsWith("/backend/")) {
+                    return prefix ? (prefix + raw) : raw;
+                }
+                return raw;
+            }
+
+            async function apiRequest(path, options) {
+                const target = apiBaseUrl() + (String(path || "").startsWith("/") ? "" : "/") + String(path || "");
+                const init = Object.assign({
+                    method: "GET",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "include"
+                }, options || {});
+                init.headers = Object.assign({}, init.headers || {});
+                if (isUnsafeMethod(init.method)) {
+                    const csrfToken = await ensureCsrfToken(false);
+                    if (csrfToken) init.headers["X-CSRF-Token"] = csrfToken;
+                }
+                if (init.body && typeof init.body !== "string") {
+                    init.body = JSON.stringify(init.body);
+                }
+                const response = await fetch(target, init);
+                captureCsrfToken(response);
+                let payload = null;
+                try {
+                    payload = await response.json();
+                } catch (_error) {
+                    payload = null;
+                }
+                if (response.status === 419 && isUnsafeMethod(init.method) && !init.__retriedCsrf) {
+                    await ensureCsrfToken(true);
+                    return apiRequest(path, Object.assign({}, options || {}, { __retriedCsrf: true }));
+                }
+                if (!response.ok) {
+                    const message = payload && payload.message ? payload.message : "Request failed (" + response.status + ")";
+                    throw new Error(message);
+                }
+                return payload || {};
+            }
+
+            async function uploadMenuImage(file) {
+                const formData = new FormData();
+                formData.append("image", file);
+                const target = apiBaseUrl() + "/menu/upload-image";
+                const csrfToken = await ensureCsrfToken(false);
+                const response = await fetch(target, {
+                    method: "POST",
+                    headers: csrfToken ? { "X-CSRF-Token": csrfToken } : {},
+                    body: formData,
+                    credentials: "include"
+                });
+                captureCsrfToken(response);
+
+                let payload = null;
+                try {
+                    payload = await response.json();
+                } catch (_error) {
+                    payload = null;
+                }
+
+                if (response.status === 419) {
+                    const refreshed = await ensureCsrfToken(true);
+                    return uploadMenuImageWithToken(file, refreshed);
+                }
+
+                if (!response.ok || !payload || !payload.success) {
+                    const message = payload && payload.message ? payload.message : "Image upload failed.";
+                    throw new Error(message);
+                }
+
+                return String(payload.data && payload.data.image || "").trim();
+            }
+
+            async function uploadMenuImageWithToken(file, csrfToken) {
+                const formData = new FormData();
+                formData.append("image", file);
+                const response = await fetch(apiBaseUrl() + "/menu/upload-image", {
+                    method: "POST",
+                    headers: csrfToken ? { "X-CSRF-Token": csrfToken } : {},
+                    body: formData,
+                    credentials: "include"
+                });
+                captureCsrfToken(response);
+                let payload = null;
+                try {
+                    payload = await response.json();
+                } catch (_error) {
+                    payload = null;
+                }
+                if (!response.ok || !payload || !payload.success) {
+                    const message = payload && payload.message ? payload.message : "Image upload failed.";
+                    throw new Error(message);
+                }
+                return String(payload.data && payload.data.image || "").trim();
+            }
+
+            async function ensureBackend() {
+                if (backendReady) return true;
+                try {
+                    const response = await apiRequest("/health", { method: "GET" });
+                    backendReady = !!(response && response.success);
+                } catch (_error) {
+                    backendReady = false;
+                }
+                return backendReady;
+            }
+
+            function normalizeOrder(order) {
+                const x = order || {};
+                return {
+                    id: String(x.id || "N/A"),
+                    createdAt: String(x.createdAt || ""),
+                    status: normalizeStatus(x.status),
+                    payment: String(x.payment || "Card"),
+                    itemCount: Math.max(0, Number(x.itemCount) || 0),
+                    total: Math.max(0, Number(x.total) || 0),
+                    ownerEmail: String(x.ownerEmail || x.userEmail || x.email || "").trim().toLowerCase(),
+                    items: Array.isArray(x.items) ? x.items : []
+                };
+            }
+
+            function normalizeStatus(value) {
+                const raw = String(value || "").trim().toLowerCase().replace(/\s+/g, " ");
+                if (raw === "placed") return "Placed";
+                if (raw === "preparing") return "Preparing";
+                if (raw === "out for delivery") return "Out for Delivery";
+                if (raw === "delivered") return "Delivered";
+                if (raw === "cancelled" || raw === "canceled") return "Cancelled";
+                return "Placed";
+            }
+
+            function parseBackendId(value) {
+                const raw = String(value || "").trim();
+                if (/^\d+$/.test(raw)) return Number(raw);
+                const match = raw.match(/(\d+)$/);
+                return match ? Number(match[1]) : 0;
+            }
+
+            function mapBackendOrder(row) {
+                const id = Number(row && row.id) || 0;
+                const createdAt = String((row && row.created_at) || new Date().toISOString());
+                const items = Array.isArray(row && row.items) ? row.items : [];
+                const itemCount = items.reduce(function (sum, item) {
+                    return sum + Math.max(1, Number(item && item.quantity) || 1);
+                }, 0);
+                return normalizeOrder({
+                    id: "FH-" + String(id).padStart(6, "0"),
+                    createdAt: createdAt,
+                    status: row && row.status ? row.status : "Placed",
+                    payment: row && row.payment_method ? row.payment_method : "Cash on Delivery",
+                    itemCount: itemCount,
+                    total: Number(row && row.total) || 0,
+                    ownerEmail: "",
+                    items: items
+                });
+            }
+
+            async function loadOrders() {
+                const response = await apiRequest("/orders/list", { method: "POST", body: {} });
+                const rows = Array.isArray(response && response.data) ? response.data : [];
+                return rows.map(mapBackendOrder).sort(function (a, b) {
+                    return Date.parse(b.createdAt || "") - Date.parse(a.createdAt || "");
+                });
+            }
+
+            async function updateOrderStatus(orderId, status) {
+                const backendId = parseBackendId(orderId);
+                const nextStatus = normalizeStatus(status);
+                if (!backendId || !nextStatus) return false;
+                await apiRequest("/orders/" + backendId + "/status", {
+                    method: "PUT",
+                    body: { status: nextStatus }
+                });
+                return true;
+            }
+
+            async function loadMenu() {
+                const response = await apiRequest("/menu/list", { method: "POST", body: {} });
+                const rows = Array.isArray(response && response.data) ? response.data : [];
+                return rows.map(function (item) {
+                    return {
+                        id: Number(item && item.id) || 0,
+                        name: String(item && item.name || "").trim(),
+                        category: String(item && item.category || "meal").trim(),
+                        description: String(item && item.description || "").trim(),
+                        price: Number(item && item.price) || 0,
+                        image: String(item && item.image || "").trim()
+                    };
+                }).filter(function (item) { return item.id > 0 && item.name; });
+            }
+
+            async function loadUsers() {
+                const response = await apiRequest("/users/list", { method: "POST", body: {} });
+                const rows = Array.isArray(response && response.data) ? response.data : [];
+                return rows.map(function (user) {
+                    return {
+                        id: Number(user && user.id) || 0,
+                        username: String(user && user.username || "").trim(),
+                        name: String(user && user.name || "").trim(),
+                        email: String(user && user.email || "").trim(),
+                        role: String(user && user.role || "user").trim().toLowerCase(),
+                        isActive: Number(user && user.is_active) === 1
+                    };
+                }).filter(function (user) { return user.id > 0; });
+            }
+
+            async function loadLoginEvents() {
+                const response = await apiRequest("/users/audit/logins", {
+                    method: "POST",
+                    body: { limit: 30 }
+                });
+                return Array.isArray(response && response.data) ? response.data : [];
+            }
+
+            async function loadRegistrationEvents() {
+                const response = await apiRequest("/users/audit/registrations", {
+                    method: "POST",
+                    body: { limit: 30 }
+                });
+                return Array.isArray(response && response.data) ? response.data : [];
+            }
+
+            function renderAuditUnavailable(message) {
+                const text = String(message || "Backend unavailable");
+                if (loginEventsBody) {
+                    loginEventsBody.innerHTML = "<tr><td colspan='5' class='text-center text-secondary'>" + esc(text) + "</td></tr>";
+                }
+                if (registrationEventsBody) {
+                    registrationEventsBody.innerHTML = "<tr><td colspan='5' class='text-center text-secondary'>" + esc(text) + "</td></tr>";
+                }
+                if (loginEventsBadge) {
+                    loginEventsBadge.textContent = "0 events";
+                }
+                if (registrationEventsBadge) {
+                    registrationEventsBadge.textContent = "0 events";
+                }
+            }
+
+            function renderLoginEvents(rows) {
+                const events = Array.isArray(rows) ? rows : [];
+                if (loginEventsBadge) {
+                    loginEventsBadge.textContent = events.length + " event" + (events.length === 1 ? "" : "s");
+                }
+                if (!loginEventsBody) {
+                    return;
+                }
+                if (!events.length) {
+                    loginEventsBody.innerHTML = "<tr><td colspan='5' class='text-center text-secondary'>No login events yet.</td></tr>";
+                    return;
+                }
+
+                loginEventsBody.innerHTML = "";
+                events.forEach(function (event) {
+                    const row = document.createElement("tr");
+                    const ok = Number(event && event.success) === 1;
+                    const identifier = String(event && (event.identifier || event.user_username) || "-");
+                    const role = String(event && event.role || "");
+                    const method = String(event && event.login_method || "password");
+                    const reason = String(event && event.failure_reason || "");
+                    const resultHtml = ok
+                        ? "<span class='badge text-bg-success'>Success</span>"
+                        : "<span class='badge text-bg-danger'>Failed</span>" + (reason ? "<small class='d-block'>" + esc(reason) + "</small>" : "");
+                    row.innerHTML = ""
+                        + "<td>" + formatDate(event && event.created_at) + "</td>"
+                        + "<td><div class='fw-semibold'>" + esc(identifier) + "</div>" + (role ? "<small>" + esc(role) + "</small>" : "") + "</td>"
+                        + "<td>" + esc(method) + "</td>"
+                        + "<td>" + resultHtml + "</td>"
+                        + "<td>" + esc(String(event && event.ip_address || "-")) + "</td>";
+                    loginEventsBody.appendChild(row);
+                });
+            }
+
+            function renderRegistrationEvents(rows) {
+                const events = Array.isArray(rows) ? rows : [];
+                if (registrationEventsBadge) {
+                    registrationEventsBadge.textContent = events.length + " event" + (events.length === 1 ? "" : "s");
+                }
+                if (!registrationEventsBody) {
+                    return;
+                }
+                if (!events.length) {
+                    registrationEventsBody.innerHTML = "<tr><td colspan='5' class='text-center text-secondary'>No registration events yet.</td></tr>";
+                    return;
+                }
+
+                registrationEventsBody.innerHTML = "";
+                events.forEach(function (event) {
+                    const row = document.createElement("tr");
+                    row.innerHTML = ""
+                        + "<td>" + formatDate(event && event.created_at) + "</td>"
+                        + "<td><div class='fw-semibold'>" + esc(String(event && event.username || "-")) + "</div></td>"
+                        + "<td>" + esc(String(event && event.email || "-")) + "</td>"
+                        + "<td><span class='badge text-bg-info'>" + esc(String(event && event.source || "-")) + "</span></td>"
+                        + "<td>" + esc(String(event && event.ip_address || "-")) + "</td>";
+                    registrationEventsBody.appendChild(row);
+                });
+            }
+
+            async function renderAuditReports() {
+                const results = await Promise.allSettled([
+                    loadLoginEvents(),
+                    loadRegistrationEvents()
+                ]);
+
+                const loginResult = results[0];
+                const registrationResult = results[1];
+
+                if (loginResult && loginResult.status === "fulfilled") {
+                    renderLoginEvents(loginResult.value);
+                } else {
+                    const reason = loginResult && loginResult.reason ? String(loginResult.reason.message || "").trim() : "";
+                    const display = reason ? ("Audit load failed: " + reason) : "Unable to load login events";
+                    if (loginEventsBody) {
+                        loginEventsBody.innerHTML = "<tr><td colspan='5' class='text-center text-secondary'>" + esc(display) + "</td></tr>";
+                    }
+                    if (loginEventsBadge) {
+                        loginEventsBadge.textContent = "0 events";
+                    }
+                    toast(display, "error");
+                }
+
+                if (registrationResult && registrationResult.status === "fulfilled") {
+                    renderRegistrationEvents(registrationResult.value);
+                } else {
+                    const reason = registrationResult && registrationResult.reason ? String(registrationResult.reason.message || "").trim() : "";
+                    const display = reason ? ("Audit load failed: " + reason) : "Unable to load registration events";
+                    if (registrationEventsBody) {
+                        registrationEventsBody.innerHTML = "<tr><td colspan='5' class='text-center text-secondary'>" + esc(display) + "</td></tr>";
+                    }
+                    if (registrationEventsBadge) {
+                        registrationEventsBadge.textContent = "0 events";
+                    }
+                    toast(display, "error");
+                }
+            }
+
+            async function clearAuditReports() {
+                const ok = window.confirm("Delete all login and registration audit reports from database?");
+                if (!ok) {
+                    return;
+                }
+
+                try {
+                    await apiRequest("/users/audit", {
+                        method: "DELETE",
+                        body: { scope: "all" }
+                    });
+                    await renderAuditReports();
+                    toast("Audit reports deleted.", "success");
+                } catch (_error) {
+                    toast("Failed to delete audit reports.", "error");
+                }
+            }
+
+            async function renderMenu() {
+                const list = await loadMenu();
+                menuCountBadge.textContent = list.length + " item" + (list.length === 1 ? "" : "s");
+                menuRows.innerHTML = "";
+                list.forEach(function (item) {
+                    const row = document.createElement("tr");
+                    const thumbSrc = imageSrc(item.image);
+                    const thumb = thumbSrc
+                        ? "<img src='" + esc(thumbSrc) + "' alt='" + esc(item.name) + "' style='width:48px;height:48px;object-fit:cover;border-radius:8px;border:1px solid rgba(255,255,255,0.15);'>"
+                        : "<span class='text-secondary small'>No photo</span>";
+                    row.innerHTML = ""
+                        + "<td>" + thumb + "</td>"
+                        + "<td>" + esc(item.name) + "</td>"
+                        + "<td><span class='badge text-bg-secondary'>" + esc(item.category) + "</span></td>"
+                        + "<td>" + esc(item.description || "-") + "</td>"
+                        + "<td class='text-success fw-semibold'>" + money(item.price) + "</td>"
+                        + "<td class='text-end'><button class='btn btn-sm btn-outline-danger' data-menu-remove='" + esc(item.id) + "'>Delete</button></td>";
+                    menuRows.appendChild(row);
+                });
+            }
+
+            function applyUserFilter() {
+                const term = String(userSearchInput && userSearchInput.value || "").trim().toLowerCase();
+                const userOnly = allUsers.filter(function (user) {
+                    return String(user.role || "").toLowerCase() === "user";
+                });
+                const filtered = !term
+                    ? userOnly.slice()
+                    : userOnly.filter(function (user) {
+                        return String(user.name).toLowerCase().includes(term)
+                            || String(user.email).toLowerCase().includes(term)
+                            || String(user.username).toLowerCase().includes(term);
+                    });
+
+                if (userCountBadge) {
+                    userCountBadge.textContent = filtered.length + " user" + (filtered.length === 1 ? "" : "s");
+                }
+
+                if (!userRows) return;
+                if (!filtered.length) {
+                    userRows.innerHTML = "<tr><td colspan='7' class='text-center text-secondary'>No users found.</td></tr>";
+                    return;
+                }
+
+                userRows.innerHTML = "";
+                filtered.forEach(function (user) {
+                    const row = document.createElement("tr");
+                    const activeBadge = user.isActive
+                        ? "<span class='badge text-bg-success'>Active</span>"
+                        : "<span class='badge text-bg-danger'>Blocked</span>";
+                    const nextActive = user.isActive ? 0 : 1;
+                    const actionLabel = user.isActive ? "Block" : "Unblock";
+                    const actionClass = user.isActive ? "btn-outline-danger" : "btn-outline-success";
+
+                    row.innerHTML = ""
+                        + "<td>" + user.id + "</td>"
+                        + "<td>" + esc(user.username || "-") + "</td>"
+                        + "<td>" + esc(user.name || "-") + "</td>"
+                        + "<td>" + esc(user.email || "-") + "</td>"
+                        + "<td><span class='badge text-bg-secondary'>" + esc(user.role || "user") + "</span></td>"
+                        + "<td>" + activeBadge + "</td>"
+                        + "<td class='text-end'><button type='button' class='btn btn-sm " + actionClass + "' data-user-toggle='" + user.id + "' data-next-active='" + nextActive + "'>" + actionLabel + "</button></td>";
+                    userRows.appendChild(row);
+                });
+            }
+
+            async function renderUsers() {
+                allUsers = await loadUsers();
+                applyUserFilter();
+            }
+
+            function drawRevenueChart(orders) {
+                if (!revenueChart || !revenueChart.getContext) return;
+                const ctx = revenueChart.getContext("2d");
+                const cssWidth = revenueChart.clientWidth || 960;
+                const cssHeight = revenueChart.clientHeight || 280;
+                const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+                revenueChart.width = Math.round(cssWidth * dpr);
+                revenueChart.height = Math.round(cssHeight * dpr);
+                const width = revenueChart.width;
+                const height = revenueChart.height;
+                ctx.clearRect(0, 0, width, height);
+                ctx.save();
+                ctx.scale(dpr, dpr);
+
+                const days = [];
+                for (var i = 6; i >= 0; i -= 1) {
+                    const d = new Date();
+                    d.setHours(0, 0, 0, 0);
+                    d.setDate(d.getDate() - i);
+                    days.push(d);
+                }
+
+                const series = days.map(function (d) {
+                    const key = d.toISOString().slice(0, 10);
+                    const sum = orders.reduce(function (acc, order) {
+                        const created = String(order.createdAt || "").slice(0, 10);
+                        return created === key ? acc + order.total : acc;
+                    }, 0);
+                    return { day: d.toLocaleDateString([], { weekday: "short" }), value: sum };
+                });
+
+                const max = Math.max(1, series.reduce(function (m, p) { return Math.max(m, p.value); }, 0));
+                const chartX = 46;
+                const chartY = 20;
+                const chartW = cssWidth - 64;
+                const chartH = cssHeight - 58;
+                const stepX = chartW / series.length;
+                const barW = Math.max(18, Math.min(34, stepX - 12));
+
+                ctx.strokeStyle = "rgba(177, 201, 225, 0.28)";
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(chartX, chartY);
+                ctx.lineTo(chartX, chartY + chartH);
+                ctx.lineTo(chartX + chartW, chartY + chartH);
+                ctx.stroke();
+
+                // Horizontal guide lines.
+                const yTicks = 4;
+                for (var t = 1; t <= yTicks; t += 1) {
+                    const ratio = t / yTicks;
+                    const yTick = chartY + chartH - (chartH * ratio);
+                    ctx.strokeStyle = "rgba(177, 201, 225, 0.12)";
+                    ctx.beginPath();
+                    ctx.moveTo(chartX, yTick);
+                    ctx.lineTo(chartX + chartW, yTick);
+                    ctx.stroke();
+                }
+
+                ctx.font = "12px Manrope, sans-serif";
+                ctx.fillStyle = "#a8bfd5";
+                ctx.fillText("Rs0", 8, chartY + chartH + 4);
+                ctx.fillText("Rs" + max.toFixed(0), 8, chartY + 4);
+
+                // Find peak day for a subtle highlight.
+                var peakIndex = 0;
+                series.forEach(function (point, idx) {
+                    if (point.value > series[peakIndex].value) {
+                        peakIndex = idx;
+                    }
+                });
+
+                series.forEach(function (point, index) {
+                    const x = chartX + (index * stepX) + (stepX - barW) / 2;
+                    const h = Math.round((point.value / max) * (chartH - 12));
+                    const y = chartY + chartH - h;
+                    const grad = ctx.createLinearGradient(x, y, x, chartY + chartH);
+                    if (index === peakIndex && point.value > 0) {
+                        grad.addColorStop(0, "rgba(255, 175, 77, 0.98)");
+                        grad.addColorStop(1, "rgba(255, 111, 77, 0.80)");
+                    } else {
+                        grad.addColorStop(0, "rgba(78, 201, 255, 0.92)");
+                        grad.addColorStop(1, "rgba(67, 158, 223, 0.66)");
+                    }
+                    ctx.fillStyle = grad;
+                    const radius = Math.min(6, Math.floor(barW / 3), h);
+
+                    // Rounded top bars.
+                    ctx.beginPath();
+                    ctx.moveTo(x, chartY + chartH);
+                    ctx.lineTo(x, y + radius);
+                    ctx.quadraticCurveTo(x, y, x + radius, y);
+                    ctx.lineTo(x + barW - radius, y);
+                    ctx.quadraticCurveTo(x + barW, y, x + barW, y + radius);
+                    ctx.lineTo(x + barW, chartY + chartH);
+                    ctx.closePath();
+                    ctx.fill();
+
+                    ctx.fillStyle = "#c7d8ea";
+                    ctx.textAlign = "center";
+                    ctx.fillText(point.day, x + (barW / 2), chartY + chartH + 18);
+
+                    if (point.value > 0) {
+                        ctx.fillStyle = "rgba(235, 245, 255, 0.86)";
+                        ctx.font = "10px Manrope, sans-serif";
+                        ctx.fillText("Rs" + Math.round(point.value), x + (barW / 2), Math.max(chartY + 10, y - 6));
+                        ctx.font = "12px Manrope, sans-serif";
+                    }
+                });
+
+                ctx.restore();
+            }
+
+            function topDish(orders) {
+                const counts = {};
+                orders.forEach(function (order) {
+                    (order.items || []).forEach(function (item) {
+                        const name = String(item && item.name || "").trim();
+                        if (!name) return;
+                        counts[name] = (counts[name] || 0) + Math.max(1, Number(item.quantity) || 1);
+                    });
+                });
+                const rows = Object.keys(counts).map(function (name) {
+                    return { name: name, qty: counts[name] };
+                }).sort(function (a, b) { return b.qty - a.qty; });
+                if (!rows.length) return "-";
+                return rows[0].name + " (" + rows[0].qty + ")";
+            }
+
+            function peakOrderHour(orders) {
+                if (!orders.length) return "-";
+                const byHour = {};
+                orders.forEach(function (order) {
+                    const ts = Date.parse(order.createdAt || "");
+                    if (!Number.isFinite(ts)) return;
+                    const hour = new Date(ts).getHours();
+                    byHour[hour] = (byHour[hour] || 0) + 1;
+                });
+                const hours = Object.keys(byHour).map(function (h) { return Number(h); }).sort(function (a, b) { return byHour[b] - byHour[a]; });
+                if (!hours.length) return "-";
+                const hour = hours[0];
+                const from = String(hour).padStart(2, "0") + ":00";
+                const to = String((hour + 1) % 24).padStart(2, "0") + ":00";
+                return from + " - " + to;
+            }
+
+            function repeatCustomersCount(orders) {
+                const byEmail = {};
+                orders.forEach(function (order) {
+                    const email = String(order.ownerEmail || "").trim().toLowerCase();
+                    if (!email) return;
+                    byEmail[email] = (byEmail[email] || 0) + 1;
+                });
+                return Object.keys(byEmail).filter(function (email) { return byEmail[email] >= 2; }).length;
+            }
+
+            function toCsv(list) {
+                const lines = ["Order ID,Placed At,Status,Payment,Items,Total"];
+                list.forEach(function (order) {
+                    const cols = [
+                        order.id,
+                        formatDate(order.createdAt),
+                        order.status,
+                        order.payment,
+                        String(order.itemCount),
+                        order.total.toFixed(2)
+                    ].map(function (value) {
+                        const text = String(value || "").replace(/\"/g, "\"\"");
+                        return "\"" + text + "\"";
+                    });
+                    lines.push(cols.join(","));
+                });
+                return lines.join("\n");
+            }
+
+            function getWeeklyGoal() {
+                const raw = window.localStorage.getItem(WEEKLY_GOAL_KEY);
+                const n = Number(raw);
+                return Number.isFinite(n) && n > 0 ? n : 1000;
+            }
+
+            function setWeeklyGoal(value) {
+                const n = Math.max(1, Math.round(Number(value) || 0));
+                window.localStorage.setItem(WEEKLY_GOAL_KEY, String(n));
+                return n;
+            }
+
+            function updateWeeklyGoalWidget(orders) {
+                const list = Array.isArray(orders) ? orders : [];
+                const achieved = list.reduce(function (sum, order) { return sum + (Number(order.total) || 0); }, 0);
+                const goal = getWeeklyGoal();
+                const progress = Math.max(0, Math.min(100, (achieved / goal) * 100));
+                const remaining = Math.max(0, goal - achieved);
+
+                if (weeklyGoalInput && document.activeElement !== weeklyGoalInput) {
+                    weeklyGoalInput.value = String(goal);
+                }
+                if (weeklyGoalProgress) {
+                    weeklyGoalProgress.style.width = progress.toFixed(1) + "%";
+                    weeklyGoalProgress.setAttribute("aria-valuenow", progress.toFixed(0));
+                }
+                if (weeklyGoalSummary) {
+                    weeklyGoalSummary.textContent = "Achieved: " + money(achieved) + " / " + money(goal) + " (" + progress.toFixed(1) + "%)";
+                }
+                if (weeklyGoalRemaining) {
+                    weeklyGoalRemaining.textContent = remaining > 0 ? ("Remaining: " + money(remaining)) : "Goal achieved";
+                    weeklyGoalRemaining.className = remaining > 0 ? "text-secondary" : "text-success fw-semibold";
+                }
+
+                const orderCount = list.length;
+                const aov = orderCount > 0 ? (achieved / orderCount) : 0;
+                if (weeklyGoalEta) {
+                    if (remaining <= 0) {
+                        weeklyGoalEta.textContent = "Goal ETA: achieved.";
+                        weeklyGoalEta.className = "text-success fw-semibold";
+                    } else if (aov <= 0) {
+                        weeklyGoalEta.textContent = "Goal ETA: add orders to estimate.";
+                        weeklyGoalEta.className = "text-secondary";
+                    } else {
+                        const neededOrders = Math.ceil(remaining / aov);
+                        weeklyGoalEta.textContent = "Goal ETA: approx " + neededOrders + " more order" + (neededOrders === 1 ? "" : "s") + " at current AOV (" + money(aov) + ").";
+                        weeklyGoalEta.className = "text-info";
+                    }
+                }
+            }
+
+            async function renderOrders() {
+                const allOrders = await loadOrders();
+                const status = String(statusFilter?.value || "all").toLowerCase();
+                const orders = status === "all"
+                    ? allOrders
+                    : allOrders.filter(function (order) { return String(order.status || "").toLowerCase() === status; });
+                lastRenderedOrders = orders.slice();
+
+                const totalOrders = orders.length;
+                const totalRevenue = orders.reduce(function (sum, order) { return sum + order.total; }, 0);
+                const averageOrderValue = totalOrders ? totalRevenue / totalOrders : 0;
+                const latestOrder = orders[0];
+                const analyticsSource = allOrders;
+
+                setText("kpiOrders", String(totalOrders));
+                setText("kpiRevenue", money(totalRevenue));
+                setText("kpiAov", money(averageOrderValue));
+                setText("kpiLatest", latestOrder ? formatDate(latestOrder.createdAt) : "-");
+                setText("kpiTopDish", topDish(analyticsSource));
+                setText("kpiPeakHour", peakOrderHour(analyticsSource));
+                setText("kpiRepeatCustomers", String(repeatCustomersCount(analyticsSource)));
+                orderCountBadge.textContent = totalOrders + " record" + (totalOrders === 1 ? "" : "s");
+                updateWeeklyGoalWidget(analyticsSource);
+
+                if (totalOrders === 0) {
+                    drawRevenueChart([]);
+                    ordersEmpty.classList.remove("d-none");
+                    ordersTable.classList.add("d-none");
+                    return;
+                }
+
+                ordersEmpty.classList.add("d-none");
+                ordersTable.classList.remove("d-none");
+                ordersBody.innerHTML = "";
+
+                orders.slice(0, 15).forEach(function (order) {
+                    const row = document.createElement("tr");
+                    const statusOptions = ORDER_STATUSES.map(function (status) {
+                        const selected = status === order.status ? " selected" : "";
+                        return "<option value='" + esc(status) + "'" + selected + ">" + esc(status) + "</option>";
+                    }).join("");
+                    row.innerHTML = ""
+                        + "<td><strong>" + esc(order.id) + "</strong></td>"
+                        + "<td>" + formatDate(order.createdAt) + "</td>"
+                        + "<td><span class='badge text-bg-secondary'>" + esc(order.status) + "</span></td>"
+                        + "<td>" + esc(order.payment) + "</td>"
+                        + "<td>" + order.itemCount + "</td>"
+                        + "<td class='text-success fw-semibold'>" + money(order.total) + "</td>"
+                        + "<td><select class='form-select form-select-sm status-select' data-order-status-id='" + esc(order.id) + "'>" + statusOptions + "</select></td>";
+                    ordersBody.appendChild(row);
+                });
+
+                drawRevenueChart(orders);
+            }
+
+            async function refreshAllData(showToast) {
+                if (refreshInFlight) return;
+                refreshInFlight = true;
+                if (refreshAllBtn) refreshAllBtn.disabled = true;
+                try {
+                    await renderOrders();
+                    await renderMenu();
+                    await renderAuditReports();
+                    await renderUsers();
+                    updateLastSync();
+                    if (showToast) toast("Dashboard refreshed.", "success");
+                } catch (_error) {
+                    if (showToast) toast("Refresh failed.", "error");
+                } finally {
+                    refreshInFlight = false;
+                    if (refreshAllBtn) refreshAllBtn.disabled = false;
+                }
+            }
+
+            function configureAutoRefresh() {
+                if (autoRefreshTimer) {
+                    clearInterval(autoRefreshTimer);
+                    autoRefreshTimer = null;
+                }
+                if (!autoRefreshToggle || !autoRefreshToggle.checked) return;
+                autoRefreshTimer = setInterval(function () {
+                    refreshAllData(false);
+                }, 30000);
+            }
+
+            function configureSectionTabs() {
+                if (!sectionTabLinks.length) return;
+                const sectionTargets = sectionTabLinks.map(function (link) {
+                    const hash = String(link.getAttribute("href") || "");
+                    if (!hash.startsWith("#")) return null;
+                    const section = document.querySelector(hash);
+                    if (!section) return null;
+                    return { link: link, section: section, hash: hash };
+                }).filter(function (item) { return !!item; });
+                if (!sectionTargets.length) return;
+
+                function setActive(hash) {
+                    sectionTargets.forEach(function (item) {
+                        const active = item.hash === hash;
+                        item.link.classList.toggle("is-active", active);
+                        item.link.setAttribute("aria-current", active ? "page" : "false");
+                    });
+                }
+
+                sectionTargets.forEach(function (item) {
+                    item.link.addEventListener("click", function (event) {
+                        event.preventDefault();
+                        item.section.scrollIntoView({ behavior: "smooth", block: "start" });
+                        setActive(item.hash);
+                        if (window.history && typeof window.history.replaceState === "function") {
+                            window.history.replaceState(null, "", item.hash);
+                        }
+                    });
+                });
+
+                if ("IntersectionObserver" in window) {
+                    const observer = new IntersectionObserver(function (entries) {
+                        entries.forEach(function (entry) {
+                            if (entry.isIntersecting) {
+                                setActive("#" + entry.target.id);
+                            }
+                        });
+                    }, {
+                        root: null,
+                        rootMargin: "-38% 0px -55% 0px",
+                        threshold: 0
+                    });
+                    sectionTargets.forEach(function (item) {
+                        observer.observe(item.section);
+                    });
+                }
+
+                const initialHash = (window.location.hash && sectionTargets.some(function (item) { return item.hash === window.location.hash; }))
+                    ? window.location.hash
+                    : sectionTargets[0].hash;
+                setActive(initialHash);
+            }
+
+            if (session) {
+                adminName.textContent = session.name;
+                if (adminIdentity) {
+                    const roleLabel = String(session.role || "admin").toUpperCase();
+                    adminIdentity.textContent = (session.email || "-") + " | " + roleLabel;
+                }
+                if (sessionSince) {
+                    sessionSince.textContent = "Session started: " + formatDate(session.loginAt);
+                }
+            }
+            logoutBtn.addEventListener("click", function () {
+                window.FoodieAuth.logout("./form.html?mode=admin");
+            });
+
+            menuForm.addEventListener("submit", async function (event) {
+                event.preventDefault();
+                const name = String(document.getElementById("menuName").value || "").trim();
+                const category = String(document.getElementById("menuCategory").value || "meal");
+                const description = String(document.getElementById("menuDescription").value || "").trim();
+                const price = Math.max(1, Number(document.getElementById("menuPrice").value || 0));
+                const imageFile = menuImageInput && menuImageInput.files ? menuImageInput.files[0] : null;
+                if (!name || !price) {
+                    toast("Enter valid menu item details.", "error");
+                    return;
+                }
+                try {
+                    let image = "";
+                    if (imageFile) {
+                        const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+                        if (!allowedTypes.includes(String(imageFile.type || "").toLowerCase())) {
+                            toast("Only JPG, PNG, or WEBP image is allowed.", "error");
+                            return;
+                        }
+                        if (Number(imageFile.size || 0) > 2 * 1024 * 1024) {
+                            toast("Image size must be 2 MB or smaller.", "error");
+                            return;
+                        }
+                        image = await uploadMenuImage(imageFile);
+                    }
+
+                    await apiRequest("/menu", {
+                        method: "POST",
+                        body: { name: name, category: category, description: description || null, price: price, image: image || null }
+                    });
+                    menuForm.reset();
+                    await renderMenu();
+                    toast("Menu item added.", "success");
+                } catch (_error) {
+                    toast("Failed to add menu item.", "error");
+                }
+            });
+
+            menuRows.addEventListener("click", async function (event) {
+                const btn = event.target.closest("[data-menu-remove]");
+                if (!btn) return;
+                const id = Number(btn.getAttribute("data-menu-remove")) || 0;
+                if (!id) return;
+                try {
+                    await apiRequest("/menu/" + id, { method: "DELETE" });
+                    await renderMenu();
+                    toast("Menu item removed.", "info");
+                } catch (_error) {
+                    toast("Failed to remove menu item.", "error");
+                }
+            });
+
+            userRows?.addEventListener("click", async function (event) {
+                const btn = event.target.closest("[data-user-toggle]");
+                if (!btn) return;
+                const id = Number(btn.getAttribute("data-user-toggle")) || 0;
+                const nextActive = Number(btn.getAttribute("data-next-active")) === 1 ? 1 : 0;
+                if (!id) return;
+
+                const actionLabel = nextActive === 1 ? "unblock" : "block";
+                const ok = window.confirm("Are you sure you want to " + actionLabel + " this user?");
+                if (!ok) return;
+
+                try {
+                    await apiRequest("/users/" + id, {
+                        method: "PATCH",
+                        body: { is_active: nextActive }
+                    });
+                    await renderUsers();
+                    toast("User " + (nextActive === 1 ? "unblocked." : "blocked."), "success");
+                } catch (error) {
+                    toast((error && error.message) ? error.message : "Failed to update user status.", "error");
+                }
+            });
+
+            ordersBody.addEventListener("change", async function (event) {
+                const select = event.target.closest("[data-order-status-id]");
+                if (!select) return;
+                const id = select.getAttribute("data-order-status-id");
+                const next = select.value;
+                try {
+                    const ok = await updateOrderStatus(id, next);
+                    if (!ok) {
+                        toast("Unable to update order status.", "error");
+                        return;
+                    }
+                    toast("Order status updated.", "success");
+                    await renderOrders();
+                } catch (_error) {
+                    toast("Unable to update order status.", "error");
+                }
+            });
+
+            statusFilter?.addEventListener("change", function () { renderOrders(); });
+            userSearchInput?.addEventListener("input", applyUserFilter);
+            exportOrdersBtn?.addEventListener("click", function () {
+                if (!lastRenderedOrders.length) {
+                    toast("No orders to export for selected filter.", "error");
+                    return;
+                }
+                const csv = toCsv(lastRenderedOrders);
+                const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+                const objectUrl = URL.createObjectURL(blob);
+                const link = document.createElement("a");
+                link.href = objectUrl;
+                link.download = "foodiehub-orders.csv";
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(objectUrl);
+                toast("Orders exported.", "success");
+            });
+            clearAuditBtn?.addEventListener("click", clearAuditReports);
+            refreshAllBtn?.addEventListener("click", function () { refreshAllData(true); });
+            saveWeeklyGoalBtn?.addEventListener("click", function () {
+                const n = setWeeklyGoal(weeklyGoalInput && weeklyGoalInput.value);
+                if (weeklyGoalInput) weeklyGoalInput.value = String(n);
+                updateWeeklyGoalWidget(lastRenderedOrders);
+                toast("Weekly goal updated.", "success");
+            });
+            autoRefreshToggle?.addEventListener("change", function () {
+                configureAutoRefresh();
+                toast(autoRefreshToggle.checked ? "Auto refresh enabled." : "Auto refresh paused.", "info");
+            });
+            configureSectionTabs();
+
+            ensureBackend().then(async function (ok) {
+                setBackendBadge(ok);
+                if (!ok) {
+                    toast("Backend is required for admin panel.", "error");
+                    setText("kpiOrders", "0");
+                    setText("kpiRevenue", money(0));
+                    setText("kpiAov", money(0));
+                    setText("kpiLatest", "-");
+                    ordersEmpty.classList.remove("d-none");
+                    ordersTable.classList.add("d-none");
+                    menuRows.innerHTML = "<tr><td colspan='4' class='text-center text-secondary'>Backend unavailable</td></tr>";
+                    if (userRows) {
+                        userRows.innerHTML = "<tr><td colspan='7' class='text-center text-secondary'>Backend unavailable</td></tr>";
+                    }
+                    if (userCountBadge) {
+                        userCountBadge.textContent = "0 users";
+                    }
+                    renderAuditUnavailable("Backend unavailable");
+                    if (lastSyncAt) lastSyncAt.textContent = "Unavailable";
+                    return;
+                }
+                await refreshAllData(false);
+                configureAutoRefresh();
+            });
+        })();
+    </script>
+</body>
+</html>
+
+
+
+
+
+

@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#ff6f4d">
+    <link rel="manifest" href="../manifest.webmanifest">
+    <title>FoodieHub - Profile</title>
+    <link href="../bootstrap/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/advanced-ui.css">
+    <link rel="icon" href="../assets/Main/logo.webp" type="image/webp">
+    <style>
+        #profile-main {
+            color: #dce5ee;
+            background:
+                radial-gradient(circle at 12% 22%, rgba(255, 99, 68, 0.11), transparent 35%),
+                radial-gradient(circle at 86% 8%, rgba(52, 152, 219, 0.1), transparent 30%),
+                linear-gradient(145deg, #0d1217 0%, #090d12 100%);
+        }
+
+        .profile-hero-section {
+            background:
+                radial-gradient(circle at 14% 15%, rgba(255, 99, 68, 0.14), transparent 34%),
+                radial-gradient(circle at 82% 70%, rgba(52, 152, 219, 0.1), transparent 30%),
+                linear-gradient(145deg, #0a0f14 0%, #05090d 100%) !important;
+            min-height: auto;
+            padding: 3.5rem 0 2.75rem;
+            align-items: flex-start;
+        }
+
+        .profile-hero-section h1 {
+            margin-bottom: 0.85rem !important;
+        }
+
+        .profile-hero-section .lead {
+            margin-bottom: 0;
+            max-width: 38rem;
+        }
+
+        .profile-hero-actions {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 0.75rem;
+        }
+
+        .profile-hero-actions #adminPanelLinkWrap {
+            margin-top: 0 !important;
+        }
+
+        @media (max-width: 991.98px) {
+            .profile-hero-section {
+                padding: 3rem 0 2.25rem;
+                align-items: center;
+            }
+
+            .profile-hero-actions {
+                align-items: flex-start;
+            }
+        }
+
+        @media (max-width: 575.98px) {
+            .profile-hero-section {
+                padding: 2.5rem 0 2rem;
+            }
+        }
+
+        .profile-avatar-wrap {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 0.9rem;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .profile-avatar-preview {
+            width: 68px;
+            height: 68px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            background: radial-gradient(circle at 28% 20%, rgba(255, 170, 140, 0.62), rgba(255, 111, 77, 0.24));
+            color: #fff;
+            display: grid;
+            place-items: center;
+            font-weight: 700;
+            font-size: 1.05rem;
+            overflow: hidden;
+            box-shadow: 0 12px 22px -16px rgba(255, 111, 77, 0.75);
+            transition: transform 0.22s ease, box-shadow 0.22s ease;
+        }
+
+        .profile-avatar-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-avatar-preview.has-image {
+            border-color: rgba(255, 255, 255, 0.38);
+            box-shadow: 0 14px 24px -18px rgba(67, 158, 223, 0.9);
+        }
+
+        .profile-avatar-preview:hover {
+            transform: translateY(-1px);
+        }
+
+        .settings-grid {
+            display: grid;
+            gap: 0.55rem;
+            margin-top: 0.35rem;
+            padding: 0.7rem;
+            border: 1px dashed rgba(255, 255, 255, 0.24);
+            border-radius: 0.8rem;
+            background: rgba(255, 255, 255, 0.02);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm sticky-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="./home.html">
+                <img src="../assets/Main/logo.webp" alt="FoodieHub Logo" width="40" height="40" class="d-inline-block align-text-top me-2">
+                FoodieHub
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="./home.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="./menu.html">Menu</a></li>
+                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="./profile.html">Profile</a></li>
+                    <li class="nav-item"><a class="nav-link" href="./orders.html">Orders</a></li>
+                    <li class="nav-item"><a class="btn btn-outline-warning ms-2" href="./cart.html">Cart <span id="navCartCount" class="badge bg-dark ms-1">0</span></a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section class="py-5 hero-section profile-hero-section">
+        <div class="container">
+            <div class="row align-items-center g-4">
+                <div class="col-lg-8">
+                    <h1 class="display-5 fw-bold mb-3">My Profile</h1>
+                    <p class="lead mb-0">Manage personal details and saved addresses for faster checkout.</p>
+                </div>
+                <div class="col-lg-4 text-lg-end">
+                    <div class="profile-hero-actions">
+                        <a href="./checkout.html" class="btn btn-primary btn-lg">Go To Checkout</a>
+                        <div id="adminPanelLinkWrap" class="mt-2 d-none">
+                            <a href="../Account/admin-panel.html" class="btn btn-outline-warning btn-lg">
+                                <i class="bi bi-shield-lock-fill me-1"></i>Admin Panel
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-5" id="profile-main">
+        <div class="container">
+            <div class="row g-4 align-items-start">
+                <div class="col-lg-6">
+                    <section class="profile-surface">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h3 class="h5 mb-0">Personal Information</h3>
+                            <span class="badge text-bg-dark" id="profileRoleBadge">User</span>
+                        </div>
+                        <form id="profileForm" novalidate>
+                            <div class="profile-avatar-wrap">
+                                <div id="profileAvatarPreview" class="profile-avatar-preview">U</div>
+                            </div>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label" for="profileName">Full Name</label>
+                                    <input id="profileName" class="form-control" required minlength="2">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="profileAge">Age</label>
+                                    <input id="profileAge" type="number" min="13" max="100" class="form-control">
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label" for="profileEmail">Email</label>
+                                    <input id="profileEmail" type="email" class="form-control" required>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label" for="profilePhone">Phone</label>
+                                    <input id="profilePhone" class="form-control" placeholder="9876543210">
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label mb-1">Personal Settings</label>
+                                    <div class="settings-grid">
+                                        <div class="form-check">
+                                            <input id="settingNewsletter" class="form-check-input" type="checkbox" checked>
+                                            <label class="form-check-label" for="settingNewsletter">Email newsletter</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input id="settingSmsUpdates" class="form-check-input" type="checkbox">
+                                            <label class="form-check-label" for="settingSmsUpdates">SMS updates for delivery</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input id="settingOrderAlerts" class="form-check-input" type="checkbox" checked>
+                                            <label class="form-check-label" for="settingOrderAlerts">Order status alerts</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 d-flex gap-2">
+                                    <button id="profileSaveBtn" class="btn btn-primary" type="submit">Save Profile</button>
+                                    <button id="profileResetBtn" class="btn btn-outline-secondary" type="button">Reset</button>
+                                </div>
+                            </div>
+                        </form>
+                        <small class="text-muted d-block mt-2" id="profileStatus">Auto-sync enabled.</small>
+                    </section>
+                </div>
+
+                <div class="col-lg-6">
+                    <section class="profile-surface">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h3 class="h5 mb-0">Saved Addresses</h3>
+                            <button id="clearAddressesBtn" type="button" class="btn btn-sm btn-outline-danger">Clear All</button>
+                        </div>
+                        <form id="addressForm" class="mb-3" novalidate>
+                            <div class="row g-2">
+                                <div class="col-md-5">
+                                    <input id="addressLabel" class="form-control" placeholder="Label (Home/Work)" required>
+                                </div>
+                                <div class="col-md-7">
+                                    <input id="addressLine" class="form-control" placeholder="Address line" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <input id="addressCity" class="form-control" placeholder="City" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <input id="addressZip" class="form-control" placeholder="ZIP" required>
+                                </div>
+                                <div class="col-md-2 d-flex align-items-center">
+                                    <div class="form-check">
+                                        <input id="addressDefault" class="form-check-input" type="checkbox">
+                                        <label for="addressDefault" class="form-check-label small">Default</label>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <button class="btn btn-outline-primary" type="submit">Add Address</button>
+                                </div>
+                            </div>
+                        </form>
+                        <div id="addressList" class="d-grid gap-2"></div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-dark text-light pt-5 pb-3">
+        <div class="container">
+            <div class="text-center"><small>&copy; 2026 FoodieHub. All rights reserved.</small></div>
+        </div>
+    </footer>
+
+    <script src="../bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="../js/ui-enhancements.js"></script>
+    <script src="../js/auth.js?v=20260217c"></script>
+    <script src="../js/app.js?v=20260218b"></script>
+    <script src="../js/profile.js?v=20260228a"></script>
+</body>
+</html>
+
+
+
+
+
