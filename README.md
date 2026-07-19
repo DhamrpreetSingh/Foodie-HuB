@@ -1,4 +1,3 @@
-<img width="1920" height="1080" alt="Screenshot 2026-07-17 202635" src="https://github.com/user-attachments/assets/cc1b7c02-3161-4d1d-9f19-eeb9652759a5" />
 # Foodie-HuB
 FoodieHub :- is   my BCA major project for a specific restaurant. It features Google OAuth authentication, real-time order tracking, an admin dashboard, Razorpay payment integration, Google Maps integration, and a DBMS-backed backend with complete CRUD operations for managing menus, customers, and orders.
 
